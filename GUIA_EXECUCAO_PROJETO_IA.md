@@ -7,7 +7,8 @@ Este roteiro estabelece o fluxo metódico de engenharia de software utilizando a
 
 ## 📑 Sumário de Execução
 
-1. [Fase 1: Design System & Contratos de Interface (Design First)](#fase-1-design-system--contratos-de-interface-design-first)
+0. [Fase 0: Instalação e Gerenciamento de Skills do Agente](#fase-0-instalação-e-gerenciamento-de-skills-do-agente)
+1. [Fase 1: Design System, Criação de Logo SVG e Contratos (Design First)](#fase-1-design-system-criação-de-logo-svg-e-contratos-design-first)
 2. [Fase 2: Sabatina Técnica e Decisão de Banco de Dados (Grill & Brainstorm)](#fase-2-sabatina-técnica-e-decisão-de-banco-de-dados-grill--brainstorm)
 3. [Fase 3: Planejamento Arquitetural Estruturado (Writing Plans)](#fase-3-planejamento-arquitetural-estruturado-writing-plans)
 4. [Fase 4: Infraestrutura & Orquestração Docker (Hands-on)](#fase-4-infraestrutura--orquestração-docker-hands-on)
@@ -17,16 +18,73 @@ Este roteiro estabelece o fluxo metódico de engenharia de software utilizando a
 
 ---
 
-## Fase 1: Design System & Contratos de Interface (Design First)
+## Fase 0: Instalação e Gerenciamento de Skills do Agente
 
-Não inicie a implementação de backend ou regras de negócio antes de definir os contratos visuais e de comunicação.
+As skills são pacotes padronizados de instruções, referências e ferramentas que estendem as capacidades do agente de IA para tarefas de engenharia de alta complexidade. 
 
-### Ação 1.1: Ativar a Skill de Design
+O projeto Voleiplay utiliza o gerenciador de skills oficial (`npx skills`) e integra repositórios externos para capacidades avançadas de design vetorial e descoberta de habilidades.
+
+### Ação 0.1: Instalar a Skill de Design Vetorial (`svg-design`)
+Instale a skill `svg-design` diretamente a partir do repositório oficial [tryopendata/skills](https://github.com/tryopendata/skills). Ela capacita o agente a gerar código SVG puro, otimizado e semanticamente correto para logos, ícones e gráficos vetoriais esportivos:
+
+```powershell
+npx skills add https://github.com/tryopendata/skills --skill svg-design -y
+```
+
+> **Verificação:** Confirme que o diretório `.agents/skills/svg-design/` foi criado contendo o arquivo `SKILL.md` e referências especializadas em geometria, curvas Bézier e animação vetorial.
+
+### Ação 0.2: Instalar a Skill de Descoberta de Habilidades (`find-skills`)
+Instale a skill `find-skills` para permitir que o agente localize dinamicamente pacotes adicionais para novas necessidades técnicas:
+
+```powershell
+npx skills add vercel-labs/skills --skill find-skills -y
+```
+
+### Ação 0.3: Restaurar Todas as Skills via `skills-lock.json`
+Em qualquer novo ambiente de desenvolvimento clonado a partir do repositório, restaure todas as dependências de skills registradas com um único comando:
+
+```powershell
+npx skills experimental_install
+```
+
+### Ação 0.4: Mapear as Skills de Governança do Agente
+Certifique-se de que o agente utilize as skills de fluxo em cada etapa:
+* **`svg-design`** (de `tryopendata/skills`): Criação da logo vetorial e iconografia do sistema.
+* **`grill-with-docs`** (ou `/grill-me`): Sabatina crítica baseada na documentação para travar premissas.
+* **`brainstorming`**: Análise de hipóteses e comparação de trade-offs de engenharia.
+* **`writing-plans`** (ou `/plan`): Formulação do plano atômico de implementação TDD.
+* **`execute-plans`** (ou `/goal`): Implementação metódica passo a passo orientada aos testes.
+
+---
+
+## Fase 1: Design System, Criação de Logo SVG e Contratos (Design First)
+
+Não inicie a implementação de backend ou regras de negócio antes de definir a identidade visual, os contratos de interface e a comunicação de dados.
+
+### Ação 1.1: Criar a Logo Vetorial do Voleiplay com a Skill `svg-design`
+Execute o prompt abaixo para acionar a skill `svg-design` (instalada de [tryopendata/skills](https://github.com/tryopendata/skills)). O agente deve desenhar a logo oficial em SVG puro, sem usar placeholders de imagem bitmap:
+
+```text
+Atue sob a skill 'svg-design' (instalada de https://github.com/tryopendata/skills).
+Crie o arquivo 'public/assets/logo-voleiplay.svg' contendo a logo vetorial oficial do Voleiplay.
+
+Siga os princípios da skill:
+1. Estrutura Limpa: viewBox='0 0 120 120', sem atributos fixos de width/height no root para permitir escala fluida.
+2. Identidade Visual Esportiva:
+   - Uma bola de vôlei estilizada com gomos dinâmicos em arcos e curvas Bézier elegantes.
+   - Detalhes náuticos/praianos em gradientes lineares 'areia dourada' (#EAB308) e 'azul oceano' (#0284C7).
+   - Tipografia integrada ou ícone solo centralizado e pixel-perfect.
+3. Código SVG Semântico: use <defs>, <linearGradient> com IDs descritivos, <path> otimizado e acessibilidade via <title> e <desc>.
+```
+
+Salve e visualize o SVG gerado em `public/assets/logo-voleiplay.svg`.
+
+### Ação 1.2: Definir Design Tokens e Estados da Interface
 Envie o prompt abaixo para o agente a fim de criar a especificação visual do novo recurso (Exemplo: *Módulo de Registro de Scouts em Tempo Real e Premiação do Torneio*):
 
 ```text
 Atue como Designer de Produto Sênior e Especialista em Frontend Angular.
-Nosso objetivo é construir o 'Painel de Scouts em Tempo Real e Liquidação de Torneio' do Voleiplay.
+Nosso objetivo é construir o 'Painel de Scouts em Tempo Real e Liquidação de Torneio' do Voleiplay, incorporando a logo gerada em SVG.
 
 Antes de escrever qualquer código HTML:
 1. Estabeleça os Design Tokens: paleta de cores (tema escuro esportivo, areia dourada #EAB308, azul atlântico #0284C7 e ardósia #0F172A), elevações e tipografia moderna.
@@ -38,7 +96,7 @@ Antes de escrever qualquer código HTML:
 3. Defina o contrato de dados JSON estrito (TypeScript Interface) que o componente espera receber do backend.
 ```
 
-### Ação 1.2: Validar o Contrato Visual
+### Ação 1.3: Validar o Contrato Visual e de Dados
 Revise a saída do agente. Garanta que o contrato possua campos obrigatórios, tipos imutáveis e tratamento de erros claros antes de prosseguir.
 
 ---
@@ -383,6 +441,8 @@ npx depcruise --config .dependency-cruiser.js backend
 
 Antes de submeter o projeto, execute e valide cada um dos itens abaixo:
 
+- [ ] Instalação das skills concluída via `npx skills add` ou restaurada com `npx skills experimental_install`.
+- [ ] Logo oficial do Voleiplay gerada em SVG semântico (`public/assets/logo-voleiplay.svg`) usando a skill `svg-design`.
 - [ ] Contratos de UI e tokens de design documentados em Markdown.
 - [ ] Transcrição da sabatina com a IA contendo a justificativa técnica para o uso do PostgreSQL, MongoDB e Redis.
 - [ ] Plano de execução gerado (`plans/*.md`) com critérios de aceite TDD.

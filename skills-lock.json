@@ -6,6 +6,24 @@
       "sourceType": "github",
       "skillPath": "skills/find-skills/SKILL.md",
       "computedHash": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
+    },
+    "openchart": {
+      "source": "tryopendata/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/openchart/skills/openchart/SKILL.md",
+      "computedHash": "e191c243a3335852105fc6633142d759a1a9bad71cab3f9b8db8751a063249f8"
+    },
+    "opendata-api": {
+      "source": "tryopendata/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/opendata/skills/opendata-api/SKILL.md",
+      "computedHash": "a5615ec1bde4506cec15d68f0fb3eecb061ac5fbeaadfa72acd0374e85254679"
+    },
+    "svg-design": {
+      "source": "tryopendata/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/opendesign/skills/svg-design/SKILL.md",
+      "computedHash": "8e7b8a23e59204b4b37d8785f0837976e7d23e07448b5e696c046d4076339836"
     }
   }
 }
