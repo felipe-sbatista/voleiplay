@@ -1,0 +1,241 @@
+<div class="players-page">
+  <!-- Top Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-box">
+      <span class="angled-badge badge-volt">ROSTER DE ATLETAS</span>
+      <h1>Jogadores & Atletas</h1>
+      <p class="page-sub">Cadastre atletas com posições, atributos e estatísticas para o torneio e sorteador</p>
+    </div>
+
+    <div class="top-actions">
+      <button (click)="openCreateModal()" class="bpt-btn bpt-btn-primary bpt-btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Cadastrar Novo Atleta
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters & Search -->
+  <div class="filter-bar bpt-card">
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        [ngModel]="searchQuery()" 
+        (ngModelChange)="searchQuery.set($event)"
+        placeholder="Buscar atleta por nome ou apelido..." 
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <select [ngModel]="positionFilter()" (ngModelChange)="positionFilter.set($event)" class="bpt-select filter-select">
+        <option value="all">Todas as Posições</option>
+        @for (pos of activeSportPositions(); track pos) {
+          <option [value]="pos">{{ pos }}</option>
+        }
+      </select>
+
+      <select [ngModel]="availabilityFilter()" (ngModelChange)="availabilityFilter.set($event)" class="bpt-select filter-select">
+        <option value="all">Todos os Status</option>
+        <option value="free">🟢 Agentes Livres (Sem Time)</option>
+        <option value="allocated">Equipes Formadas</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Players Grid -->
+  @if (filteredPlayers().length === 0) {
+    <div class="empty-state bpt-card">
+      <div class="empty-icon">🏃</div>
+      <h3>Nenhum atleta encontrado</h3>
+      <p>Cadastre um novo atleta ou redefina os filtros de busca.</p>
+      <button (click)="openCreateModal()" class="bpt-btn bpt-btn-primary mt-3">Cadastrar Atleta</button>
+    </div>
+  }
+
+  <div class="bpt-grid grid-cols-3">
+    @for (player of filteredPlayers(); track player.id) {
+      <div class="player-card bpt-card">
+        <div class="player-header">
+          <div class="player-avatar-wrap">
+            <img [src]="player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" [alt]="player.name" class="player-avatar" />
+            <span class="gender-pill">{{ player.gender }}</span>
+          </div>
+
+          <div class="player-main-info">
+            <div class="position-stars-row">
+              <span class="angled-badge badge-volt text-xs">{{ player.position }}</span>
+              <div class="stars-display">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span class="star-icon" [class.filled]="star <= player.skillLevel">★</span>
+                }
+              </div>
+            </div>
+
+            <h3 class="player-name">{{ player.name }}</h3>
+            @if (player.nickname) {
+              <span class="player-nick">"{{ player.nickname }}"</span>
+            }
+          </div>
+        </div>
+
+        <!-- Details Info -->
+        <div class="player-details-row">
+          <div class="detail-item">
+            <span class="d-lbl">Altura:</span>
+            <span class="d-val">{{ player.height ? player.height + ' cm' : '-' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="d-lbl">Braço:</span>
+            <span class="d-val">{{ player.dominantHand }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="d-lbl">MVPs:</span>
+            <span class="d-val text-gold">⭐ {{ player.stats.mvps }}</span>
+          </div>
+        </div>
+
+        @if (player.bio) {
+          <p class="player-bio">{{ player.bio }}</p>
+        }
+
+        <!-- Team Status Badge -->
+        <div class="player-team-status">
+          @if (getTeamName(player.teamId); as tName) {
+            <div class="status-allocated">
+              <span class="status-dot-blue"></span>
+              <span>Time: <strong>{{ tName }}</strong></span>
+            </div>
+          } @else {
+            <div class="status-free">
+              <span class="status-dot-green"></span>
+              <span>Agente Livre (Disponível para Sorteio)</span>
+            </div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="player-card-actions">
+          <button (click)="openEditModal(player)" class="bpt-btn bpt-btn-secondary bpt-btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Editar
+          </button>
+          <button (click)="deletePlayer(player)" class="bpt-btn bpt-btn-danger bpt-btn-sm" title="Excluir Atleta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal Create / Edit Player -->
+@if (isModalOpen) {
+  <div class="bpt-modal-overlay" (click)="closeModal()">
+    <div class="bpt-modal-content" (click)="$event.stopPropagation()">
+      <div class="bpt-card-header">
+        <h3 class="font-athletic">{{ isEditing ? 'Editar Atleta' : 'Novo Atleta' }}</h3>
+        <button class="bpt-btn bpt-btn-secondary bpt-btn-sm" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bpt-card-body">
+        <form (ngSubmit)="savePlayer()" class="player-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label class="bpt-label">Nome Completo *</label>
+              <input type="text" [(ngModel)]="name" name="name" placeholder="Ex: Eduarda Santos Lisboa" required class="bpt-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Apelido</label>
+              <input type="text" [(ngModel)]="nickname" name="nickname" placeholder="Ex: Duda" class="bpt-input" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="bpt-label">Posição</label>
+              <select [(ngModel)]="position" name="position" class="bpt-select">
+                @for (pos of activeSportPositions(); track pos) {
+                  <option [value]="pos">{{ pos }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Gênero</label>
+              <select [(ngModel)]="gender" name="gender" class="bpt-select">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="Misto">Misto</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Braço Dominante</label>
+              <select [(ngModel)]="dominantHand" name="dominantHand" class="bpt-select">
+                <option value="Destro">Destro</option>
+                <option value="Canhoto">Canhoto</option>
+                <option value="Ambidestro">Ambidestro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="bpt-label">Altura (cm)</label>
+              <input type="number" min="140" max="230" [(ngModel)]="height" name="height" placeholder="185" class="bpt-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Nível de Habilidade (1 a 5 Estrelas)</label>
+              <div class="skill-picker">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <button type="button" class="star-btn" [class.active]="star <= skillLevel" (click)="setSkill(star)">
+                    ★
+                  </button>
+                }
+                <span class="skill-val-label">{{ skillLevel }} Estrelas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avatar Picker -->
+          <div class="form-group">
+            <label class="bpt-label">Foto / Avatar Preset</label>
+            <div class="avatar-presets-grid">
+              @for (preset of avatarPresets; track preset) {
+                <img 
+                  [src]="preset" 
+                  class="preset-thumb" 
+                  [class.selected]="avatar === preset" 
+                  (click)="avatar = preset" 
+                />
+              }
+            </div>
+            <input type="text" [(ngModel)]="avatar" name="avatar" placeholder="Ou cole a URL da imagem..." class="bpt-input mt-2" />
+          </div>
+
+          <div class="form-group">
+            <label class="bpt-label">Bio / Informações Adicionais</label>
+            <textarea [(ngModel)]="bio" name="bio" rows="2" placeholder="Histórico, pontos fortes ou conquistas..." class="bpt-textarea"></textarea>
+          </div>
+
+          <div class="modal-actions mt-4">
+            <button type="button" class="bpt-btn bpt-btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="bpt-btn bpt-btn-primary">
+              {{ isEditing ? 'Salvar Alterações' : 'Cadastrar Atleta' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

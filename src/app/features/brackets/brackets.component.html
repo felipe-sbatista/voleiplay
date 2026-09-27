@@ -1,0 +1,292 @@
+<div class="brackets-page">
+  <!-- Top Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-box">
+      <span class="angled-badge badge-volt">CHAVEAMENTO OFICIAL</span>
+      <h1>Chaves & Tabela do Torneio</h1>
+      <p class="page-sub">Acompanhe os confrontos, lance os placares de sets e avance os times até a grande final</p>
+    </div>
+
+    <div class="top-actions">
+      <!-- Format switcher -->
+      <div class="mode-switch-group">
+        <button 
+          class="switch-btn" 
+          [class.active]="viewMode() === 'knockout'" 
+          (click)="viewMode.set('knockout')">
+          Mata-Mata (Eliminatória)
+        </button>
+        <button 
+          class="switch-btn" 
+          [class.active]="viewMode() === 'groups'" 
+          (click)="viewMode.set('groups')">
+          Fase de Grupos (Pool Play)
+        </button>
+      </div>
+
+      <button (click)="openDrawModal()" class="bpt-btn bpt-btn-primary bpt-btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="16 3 21 3 21 8"></polyline>
+          <line x1="4" y1="20" x2="21" y2="3"></line>
+          <polyline points="21 16 21 21 16 21"></polyline>
+          <line x1="15" y1="15" x2="21" y2="21"></line>
+          <line x1="4" y1="4" x2="9" y2="9"></line>
+        </svg>
+        Sortear Chaves do Torneio
+      </button>
+    </div>
+  </div>
+
+  <!-- Champion Banner if Completed -->
+  @if (championTeam(); as champ) {
+    <div class="champion-trophy-banner bpt-card">
+      <div class="trophy-icon">🏆</div>
+      <div class="trophy-info">
+        <span class="angled-badge badge-volt">CAMPEÃO DO TORNEIO</span>
+        <h2>{{ champ.flag }} {{ champ.name }}</h2>
+        <span class="champ-sub">{{ state.tournament().name }} • Medição Ouro</span>
+      </div>
+    </div>
+  }
+
+  <!-- View 1: Single Elimination Knockout Tree -->
+  @if (viewMode() === 'knockout') {
+    @if (rounds().length === 0) {
+      <div class="empty-state bpt-card">
+        <div class="empty-icon">🏐</div>
+        <h3>Nenhuma chave gerada</h3>
+        <p>Clique em "Sortear Chaves do Torneio" para posicionar os times na árvore de mata-mata.</p>
+        <button (click)="openDrawModal()" class="bpt-btn bpt-btn-primary mt-3">Sortear Chaves</button>
+      </div>
+    } @else {
+      <!-- Bracket Tree Scrollable Container -->
+      <div class="bracket-tree-wrapper">
+        <div class="bracket-rounds-container">
+          @for (round of rounds(); track round.roundIndex; let isLast = $last) {
+            <div class="bracket-round-column">
+              <div class="round-header">
+                <span class="round-title">{{ round.stageName }}</span>
+                <span class="round-count">{{ round.matches.length }} {{ round.matches.length === 1 ? 'Jogo' : 'Jogos' }}</span>
+              </div>
+
+              <div class="round-matches-list" [style.--match-count]="round.matches.length">
+                @for (match of round.matches; track match.id) {
+                  <div 
+                    class="bracket-match-card"
+                    [class.is-finished]="match.status === 'finished'"
+                    [class.is-live]="match.status === 'live'"
+                    [class.has-teams]="match.team1Id && match.team2Id"
+                    (click)="openScoreModal(match)">
+                    
+                    <div class="match-meta-bar">
+                      <span class="match-court-badge">{{ match.court || 'Quadra Central' }} • {{ match.scheduledTime }}</span>
+                      @if (match.status === 'live') {
+                        <span class="angled-badge badge-live text-xs">AO VIVO</span>
+                      } @else if (match.status === 'finished') {
+                        <span class="angled-badge badge-outline text-xs">FIM</span>
+                      }
+                    </div>
+
+                    <!-- Team 1 Slot -->
+                    <div 
+                      class="match-team-slot" 
+                      [class.winner]="match.winnerId === match.team1Id"
+                      [class.empty]="!match.team1Id">
+                      <div class="slot-name">
+                        <span class="team-flag-mini">{{ match.team1?.flag || '🏐' }}</span>
+                        <span class="team-text-truncate">{{ match.team1?.name || 'Aguardando vencedor...' }}</span>
+                      </div>
+                      <span class="slot-sets">{{ match.team1Sets }}</span>
+                    </div>
+
+                    <!-- Team 2 Slot -->
+                    <div 
+                      class="match-team-slot" 
+                      [class.winner]="match.winnerId === match.team2Id"
+                      [class.empty]="!match.team2Id">
+                      <div class="slot-name">
+                        <span class="team-flag-mini">{{ match.team2?.flag || '🏐' }}</span>
+                        <span class="team-text-truncate">{{ match.team2?.name || 'Aguardando vencedor...' }}</span>
+                      </div>
+                      <span class="slot-sets">{{ match.team2Sets }}</span>
+                    </div>
+
+                    <!-- Partial Sets Breakdown -->
+                    @if (match.sets && match.sets.length > 0) {
+                      <div class="partial-sets-bar">
+                        @for (s of match.sets; track s.setNumber) {
+                          <span>({{ s.team1Score }}-{{ s.team2Score }})</span>
+                        }
+                      </div>
+                    }
+
+                    <div class="match-hover-hint">
+                      <span>Clique para editar placar</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Bronze / 3rd Place Match Card Column -->
+          @if (thirdPlaceMatch(); as third) {
+            <div class="bracket-round-column third-place-col">
+              <div class="round-header bronze-header">
+                <span class="round-title">Disputa 3º Lugar (Bronze)</span>
+                <span class="round-count">Medalha de Bronze</span>
+              </div>
+
+              <div class="round-matches-list">
+                <div 
+                  class="bracket-match-card bronze-card"
+                  [class.is-finished]="third.status === 'finished'"
+                  (click)="openScoreModal(third)">
+                  
+                  <div class="match-meta-bar">
+                    <span class="match-court-badge">{{ third.court }} • {{ third.scheduledTime }}</span>
+                    <span class="angled-badge badge-coral text-xs">🥉 BRONZE</span>
+                  </div>
+
+                  <div class="match-team-slot" [class.winner]="third.winnerId === third.team1Id" [class.empty]="!third.team1Id">
+                    <div class="slot-name">
+                      <span>{{ third.team1?.flag || '🏐' }}</span>
+                      <span class="team-text-truncate">{{ third.team1?.name || 'Perdedor Semifinal 1' }}</span>
+                    </div>
+                    <span class="slot-sets">{{ third.team1Sets }}</span>
+                  </div>
+
+                  <div class="match-team-slot" [class.winner]="third.winnerId === third.team2Id" [class.empty]="!third.team2Id">
+                    <div class="slot-name">
+                      <span>{{ third.team2?.flag || '🏐' }}</span>
+                      <span class="team-text-truncate">{{ third.team2?.name || 'Perdedor Semifinal 2' }}</span>
+                    </div>
+                    <span class="slot-sets">{{ third.team2Sets }}</span>
+                  </div>
+
+                  @if (third.sets && third.sets.length > 0) {
+                    <div class="partial-sets-bar">
+                      @for (s of third.sets; track s.setNumber) {
+                        <span>({{ s.team1Score }}-{{ s.team2Score }})</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+
+  <!-- View 2: Group Stage (Pool Play) -->
+  @if (viewMode() === 'groups') {
+    <div class="groups-stage-view">
+      <div class="groups-top-bar bpt-card">
+        <div class="gt-left">
+          <span class="angled-badge badge-volt">POOL PLAY</span>
+          <h3>Fase de Grupos Beach Pro Tour</h3>
+        </div>
+        <button (click)="generateGroupStage()" class="bpt-btn bpt-btn-secondary bpt-btn-sm">
+          Gerar Novo Chaveamento de Grupos
+        </button>
+      </div>
+
+      @if (groupMatches().length === 0) {
+        <div class="empty-state bpt-card mt-4">
+          <div class="empty-icon">🏐</div>
+          <h3>Fase de Grupos não iniciada</h3>
+          <p>Clique abaixo para sortear os grupos e gerar a tabela de confrontos todos contra todos.</p>
+          <button (click)="generateGroupStage()" class="bpt-btn bpt-btn-primary mt-3">Gerar Fase de Grupos</button>
+        </div>
+      } @else {
+        <div class="bpt-grid grid-cols-2 mt-4">
+          @for (match of groupMatches(); track match.id) {
+            <div class="group-match-card bpt-card" (click)="openScoreModal(match)">
+              <div class="gm-header">
+                <span class="angled-badge badge-outline text-xs">{{ match.groupName || match.stageName }}</span>
+                <span class="text-xs text-muted">{{ match.court }} • {{ match.scheduledTime }}</span>
+              </div>
+
+              <div class="gm-teams">
+                <div class="gm-team" [class.winner]="match.winnerId === match.team1Id">
+                  <span>{{ match.team1?.flag }} {{ match.team1?.name }}</span>
+                  <strong>{{ match.team1Sets }}</strong>
+                </div>
+                <div class="gm-team" [class.winner]="match.winnerId === match.team2Id">
+                  <span>{{ match.team2?.flag }} {{ match.team2?.name }}</span>
+                  <strong>{{ match.team2Sets }}</strong>
+                </div>
+              </div>
+
+              @if (match.sets && match.sets.length > 0) {
+                <div class="partial-sets-bar">
+                  @for (s of match.sets; track s.setNumber) {
+                    <span>Set {{ s.setNumber }}: {{ s.team1Score }}x{{ s.team2Score }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Modal: Sorteio de Chaves Setup -->
+@if (isDrawModalOpen()) {
+  <div class="bpt-modal-overlay" (click)="closeDrawModal()">
+    <div class="bpt-modal-content" (click)="$event.stopPropagation()">
+      <div class="bpt-card-header">
+        <h3 class="font-athletic">Sortear Chaves do Torneio</h3>
+        <button class="bpt-btn bpt-btn-secondary bpt-btn-sm" (click)="closeDrawModal()">✕</button>
+      </div>
+
+      <div class="bpt-card-body">
+        <div class="draw-modal-info">
+          <p>O sistema irá posicionar os <strong>{{ state.teams().length }} times cadastrados</strong> na árvore eliminatória.</p>
+
+          <div class="form-group mt-3">
+            <label class="bpt-label">Tipo de Sorteio de Chaves</label>
+            <div class="mode-options">
+              <label class="mode-radio-box" [class.selected]="drawSeeded()">
+                <input type="radio" name="seeded" [value]="true" [ngModel]="drawSeeded()" (ngModelChange)="drawSeeded.set(true)" />
+                <div>
+                  <span class="mode-title">🏆 Cabeças de Chave (Seed #1 vs #8, #4 vs #5...)</span>
+                  <p class="mode-desc">Respeita os seeds/rankings cadastrados para evitar que os melhores se enfrentem na primeira rodada.</p>
+                </div>
+              </label>
+
+              <label class="mode-radio-box" [class.selected]="!drawSeeded()">
+                <input type="radio" name="seeded" [value]="false" [ngModel]="drawSeeded()" (ngModelChange)="drawSeeded.set(false)" />
+                <div>
+                  <span class="mode-title">🎲 Sorteio Aberto 100% Aleatório</span>
+                  <p class="mode-desc">Todos os times são embaralhados e alocados sem considerar seeds.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions mt-4">
+          <button class="bpt-btn bpt-btn-secondary" (click)="closeDrawModal()">Cancelar</button>
+          <button class="bpt-btn bpt-btn-primary bpt-btn-lg" (click)="executeBracketDraw()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line></svg>
+            Gerar Chave Eliminatória
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Score Modal -->
+@if (selectedMatch) {
+  <app-match-score-modal 
+    [match]="selectedMatch" 
+    (close)="closeScoreModal()" 
+    (matchUpdated)="closeScoreModal()">
+  </app-match-score-modal>
+}

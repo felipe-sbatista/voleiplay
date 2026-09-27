@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
+    container_name: voleiplay-elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=voleiplay-cluster
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.18
+    container_name: voleiplay-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+      - XPACK_SECURITY_ENABLED=false
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -I http://localhost:5601/api/status | grep -q 'HTTP/1.1 200 OK\\|HTTP/1.1 302 Found'"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.17.18
+    container_name: voleiplay-apm-server
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+      - "8200:8200"
+    command: >
+      apm-server -e
+        -E apm-server.rum.enabled=true
+        -E apm-server.host="0.0.0.0:8200"
+        -E setup.kibana.host="kibana:5601"
+        -E setup.template.enabled=true
+        -E output.elasticsearch.hosts=["elasticsearch:9200"]
+        -E apm-server.kibana.enabled=true
+        -E apm-server.kibana.host="kibana:5601"
+        -E logging.to_stderr=true
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_started
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:8200/ | grep -q '\"status\":\"ok\"\\|\"version\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # 🐘 Banco Relacional Leve (SQL / Transacional ACID)
+  postgres:
+    image: postgres:16-alpine
+    container_name: voleiplay-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: voleiplay
+      POSTGRES_PASSWORD: voleiplay_pass
+      POSTGRES_DB: voleiplay
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voleiplay -d voleiplay"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 🍃 Banco NoSQL Documental (Schemaless / Alta Flexibilidade)
+  mongodb:
+    image: mongo:7
+    container_name: voleiplay-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: voleiplay
+      MONGO_INITDB_ROOT_PASSWORD: voleiplay_pass
+      MONGO_INITDB_DATABASE: voleiplay
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ⚡ In-Memory Key-Value & Caching Store (<1ms de latência)
+  redis:
+    image: redis:7-alpine
+    container_name: voleiplay-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  es_data:
+    driver: local
+  pg_data:
+    driver: local
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local

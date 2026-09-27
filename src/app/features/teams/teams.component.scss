@@ -1,0 +1,356 @@
+.teams-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-top-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .page-title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h1 {
+      font-size: 36px;
+      line-height: 1;
+    }
+
+    .page-sub {
+      color: var(--bpt-text-muted);
+      font-size: 14px;
+    }
+  }
+}
+
+.filter-bar {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bpt-bg-surface);
+    border: 1px solid var(--bpt-border-medium);
+    border-radius: 4px;
+    padding: 6px 12px;
+    width: 320px;
+
+    svg {
+      color: var(--bpt-text-dim);
+    }
+
+    .search-input {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+
+      &::placeholder {
+        color: var(--bpt-text-dim);
+      }
+    }
+  }
+
+  .category-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+
+    .cat-tab {
+      background: var(--bpt-bg-surface);
+      border: 1px solid var(--bpt-border-subtle);
+      color: var(--bpt-text-muted);
+      font-family: var(--font-athletic);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+
+      &:hover {
+        background: var(--bpt-bg-elevated);
+        color: #FFFFFF;
+      }
+
+      &.active {
+        background: var(--bpt-volt-subtle);
+        border-color: var(--bpt-volt);
+        color: var(--bpt-volt);
+      }
+    }
+  }
+}
+
+/* Team Card */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-top: 3px solid var(--team-accent, var(--bpt-volt));
+
+  .team-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--bpt-border-subtle);
+
+    .team-head-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .flag-big {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .seed-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--bpt-volt);
+      letter-spacing: 0.05em;
+    }
+
+    .team-title {
+      font-size: 20px;
+      margin: 2px 0;
+      color: #FFFFFF;
+    }
+
+    .team-origin {
+      font-size: 12px;
+      color: var(--bpt-text-dim);
+    }
+  }
+
+  .team-players-box {
+    padding: 16px 20px;
+    flex: 1;
+
+    .box-label {
+      font-family: var(--font-athletic);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--bpt-text-dim);
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .no-players-msg {
+      font-size: 13px;
+      color: var(--bpt-text-dim);
+      font-style: italic;
+    }
+
+    .players-chips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .player-mini-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bpt-bg-surface);
+      border: 1px solid var(--bpt-border-subtle);
+      padding: 6px 10px;
+      border-radius: 6px;
+
+      .chip-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .chip-info {
+        display: flex;
+        flex-direction: column;
+
+        .chip-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #FFFFFF;
+        }
+
+        .chip-pos {
+          font-size: 11px;
+          color: var(--bpt-text-dim);
+        }
+      }
+    }
+  }
+
+  .team-card-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 12px 20px;
+    background: var(--bpt-bg-surface);
+    border-top: 1px solid var(--bpt-border-subtle);
+    border-bottom: 1px solid var(--bpt-border-subtle);
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .s-val {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 700;
+        color: #FFFFFF;
+      }
+
+      .s-lbl {
+        font-family: var(--font-athletic);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--bpt-text-dim);
+      }
+
+      &.highlight-volt .s-val {
+        color: var(--bpt-volt);
+      }
+    }
+  }
+
+  .team-card-actions {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+/* Modal Form */
+.team-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .players-select-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+    background: var(--bpt-bg-surface);
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--bpt-border-medium);
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .player-select-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    background: var(--bpt-bg-card);
+    border: 1px solid var(--bpt-border-subtle);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      border-color: var(--bpt-border-medium);
+      background: var(--bpt-bg-elevated);
+    }
+
+    &.selected {
+      background: var(--bpt-volt-subtle);
+      border-color: var(--bpt-volt);
+      color: var(--bpt-volt);
+
+      .check-box-indicator {
+        background: var(--bpt-volt);
+        color: #000000;
+      }
+    }
+
+    .p-sel-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .p-sel-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .p-sel-name {
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .p-sel-pos {
+        font-size: 10px;
+        color: var(--bpt-text-dim);
+      }
+    }
+
+    .check-box-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: var(--bpt-bg-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}

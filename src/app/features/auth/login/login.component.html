@@ -1,0 +1,213 @@
+<div class="auth-page-container">
+  <!-- Dynamic Glow Elements -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <div class="auth-card-wrap">
+    <!-- Header Brand -->
+    <div class="auth-header">
+      <div class="auth-logo-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 10 10 0 0 0 10-10"></path>
+          <path d="M8.7 10.7c1.6-1.6 3.8-2.6 6.3-2.7"></path>
+          <path d="M4.9 14.9c3.3.4 6.3 1.8 8.6 4.1"></path>
+        </svg>
+      </div>
+      <h1 class="auth-title">VOLEI<span class="text-volt">PLAY</span></h1>
+      <p class="auth-subtitle">Beach Pro Tour • Acesso ao Sistema Oficial</p>
+    </div>
+
+    <!-- Quick Demo Accounts (1-Click) -->
+    <div class="demo-section">
+      <div class="demo-label">⚡ ACESSO RÁPIDO PARA AULA / DEMONSTRAÇÃO:</div>
+      <div class="demo-grid">
+        @for (demo of demoUsers; track demo.email) {
+          <button type="button" (click)="quickLogin(demo)" class="demo-card" [disabled]="auth.isLoading()">
+            <img [src]="demo.avatar" [alt]="demo.name" class="demo-avatar">
+            <div class="demo-info">
+              <div class="demo-name">{{ demo.name }}</div>
+              <div class="demo-badge" [class.badge-admin]="demo.role === 'ADMIN'" [class.badge-athlete]="demo.role === 'ATHLETE'">
+                {{ demo.badge }}
+              </div>
+            </div>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Tab Switcher -->
+    <div class="tab-switcher">
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'LOGIN'"
+        (click)="activeTab.set('LOGIN')">
+        ENTRAR
+      </button>
+      <button 
+        type="button" 
+        class="tab-btn" 
+        [class.active]="activeTab() === 'REGISTER'"
+        (click)="activeTab.set('REGISTER')">
+        CRIAR CONTA
+      </button>
+    </div>
+
+    <!-- Success Alert -->
+    @if (successMessage()) {
+      <div class="auth-success-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    <!-- Error Alert -->
+    @if (auth.authError()) {
+      <div class="auth-error-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ auth.authError() }}</span>
+      </div>
+    }
+
+    <!-- Form: Login -->
+    @if (activeTab() === 'LOGIN') {
+      <form (ngSubmit)="onLogin()" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">E-mail</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
+            </svg>
+            <input 
+              type="email" 
+              id="login-email" 
+              name="loginEmail" 
+              [(ngModel)]="loginEmail" 
+              placeholder="exemplo@voleiplay.com.br" 
+              required
+              class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-pass">Senha</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input 
+              type="password" 
+              id="login-pass" 
+              name="loginPassword" 
+              [(ngModel)]="loginPassword" 
+              placeholder="••••••••" 
+              required
+              class="form-input">
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" [disabled]="auth.isLoading()">
+          @if (auth.isLoading()) {
+            <span class="spinner"></span> Conectando ao Auth Service...
+          } @else {
+            ACESSAR PAINEL DO CIRCUITO ➔
+          }
+        </button>
+      </form>
+    }
+
+    <!-- Form: Register -->
+    @if (activeTab() === 'REGISTER') {
+      <form (ngSubmit)="onRegister()" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Nome Completo</label>
+          <input 
+            type="text" 
+            id="reg-name" 
+            name="regName" 
+            [(ngModel)]="regName" 
+            placeholder="Seu nome" 
+            required
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">E-mail</label>
+          <input 
+            type="email" 
+            id="reg-email" 
+            name="regEmail" 
+            [(ngModel)]="regEmail" 
+            placeholder="seu.email@voleiplay.com.br" 
+            required
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-pass">Senha</label>
+          <input 
+            type="password" 
+            id="reg-pass" 
+            name="regPassword" 
+            [(ngModel)]="regPassword" 
+            placeholder="Crie uma senha segura" 
+            required
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Perfil / Categoria</label>
+          <div class="role-selector">
+            <button 
+              type="button" 
+              class="role-opt" 
+              [class.selected]="regRole === 'ATHLETE'"
+              (click)="regRole = 'ATHLETE'">
+              🏐 Atleta
+            </button>
+            <button 
+              type="button" 
+              class="role-opt" 
+              [class.selected]="regRole === 'COACH'"
+              (click)="regRole = 'COACH'">
+              📋 Treinador
+            </button>
+            <button 
+              type="button" 
+              class="role-opt" 
+              [class.selected]="regRole === 'FAN'"
+              (click)="regRole = 'FAN'">
+              🎟️ Torcedor
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" [disabled]="auth.isLoading()">
+          @if (auth.isLoading()) {
+            <span class="spinner"></span> Cadastrando...
+          } @else {
+            CRIAR MINHA CONTA ➔
+          }
+        </button>
+      </form>
+    }
+
+    <!-- Microservice Footer Note -->
+    <div class="auth-footer-note">
+      <div class="service-pill">
+        <span class="online-dot"></span>
+        Conectado ao <strong>Auth Microservice (:3007)</strong>
+      </div>
+    </div>
+  </div>
+</div>

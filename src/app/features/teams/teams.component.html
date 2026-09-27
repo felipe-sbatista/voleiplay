@@ -1,0 +1,240 @@
+<div class="teams-page">
+  <!-- Page Header -->
+  <div class="page-top-bar">
+    <div class="page-title-box">
+      <span class="angled-badge badge-volt">CADASTRO OFICIAL</span>
+      <h1>Times & Duplas</h1>
+      <p class="page-sub">Gerencie as duplas e equipes inscritas no torneio</p>
+    </div>
+
+    <div class="top-actions">
+      <button (click)="openCreateModal()" class="bpt-btn bpt-btn-primary bpt-btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Cadastrar Novo Time
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters & Search Bar -->
+  <div class="filter-bar bpt-card">
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        [ngModel]="searchQuery()" 
+        (ngModelChange)="searchQuery.set($event)"
+        placeholder="Buscar por time, cidade ou país..." 
+        class="search-input"
+      />
+    </div>
+
+    <div class="category-tabs">
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'all'" 
+        (click)="categoryFilter.set('all')">
+        Todos ({{ state.teams().length }})
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'Dupla (2x2)'" 
+        (click)="categoryFilter.set('Dupla (2x2)')">
+        Duplas 2x2
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'Trio (3x3)'" 
+        (click)="categoryFilter.set('Trio (3x3)')">
+        Trios 3x3
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'Quarteto (4x4)'" 
+        (click)="categoryFilter.set('Quarteto (4x4)')">
+        Quartetos 4x4
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'Sexteto (6x6)'" 
+        (click)="categoryFilter.set('Sexteto (6x6)')">
+        Sextetos 6x6
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="categoryFilter() === 'Outro'" 
+        (click)="categoryFilter.set('Outro')">
+        Outro
+      </button>
+    </div>
+  </div>
+
+  <!-- Teams Grid -->
+  @if (filteredTeams().length === 0) {
+    <div class="empty-state bpt-card">
+      <div class="empty-icon">🏐</div>
+      <h3>Nenhum time encontrado</h3>
+      <p>Cadastre um novo time ou use o sorteador automático para gerar times com os atletas cadastrados.</p>
+      <button (click)="openCreateModal()" class="bpt-btn bpt-btn-primary mt-3">Cadastrar Time</button>
+    </div>
+  }
+
+  <div class="bpt-grid grid-cols-3">
+    @for (team of filteredTeams(); track team.id) {
+      <div class="team-card bpt-card" [style.--team-accent]="team.color || '#D4F63D'">
+        <div class="team-card-header">
+          <div class="team-head-left">
+            <span class="flag-big">{{ team.flag || '🏐' }}</span>
+            <div>
+              <span class="seed-badge">SEED #{{ team.seed || 'N/A' }}</span>
+              <h3 class="team-title">{{ team.name }}</h3>
+              <span class="team-origin">{{ team.city ? team.city + ', ' : '' }}{{ team.country }}</span>
+            </div>
+          </div>
+          <span class="angled-badge badge-outline text-xs">{{ team.category }}</span>
+        </div>
+
+        <!-- Players List in Team -->
+        <div class="team-players-box">
+          <span class="box-label">ATLETAS ESCALADOS:</span>
+          @if (!team.players || team.players.length === 0) {
+            <p class="no-players-msg">Nenhum jogador vinculado</p>
+          } @else {
+            <div class="players-chips-list">
+              @for (player of team.players; track player.id) {
+                <div class="player-mini-chip">
+                  <img [src]="player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'" [alt]="player.name" class="chip-avatar" />
+                  <div class="chip-info">
+                    <span class="chip-name">{{ player.nickname || player.name }}</span>
+                    <span class="chip-pos">{{ player.position }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Stats Footer -->
+        <div class="team-card-stats">
+          <div class="stat-pill">
+            <span class="s-val">{{ team.stats.wins }}V - {{ team.stats.losses }}D</span>
+            <span class="s-lbl">Campanha</span>
+          </div>
+          <div class="stat-pill">
+            <span class="s-val">{{ team.stats.setsWon }}-{{ team.stats.setsLost }}</span>
+            <span class="s-lbl">Sets</span>
+          </div>
+          <div class="stat-pill">
+            <span class="s-val">{{ team.stats.pointsRatio || '1.0' }}</span>
+            <span class="s-lbl">Ratio</span>
+          </div>
+          <div class="stat-pill highlight-volt">
+            <span class="s-val">{{ team.stats.tournamentPoints }}</span>
+            <span class="s-lbl">Pontos</span>
+          </div>
+        </div>
+
+        <!-- Card Actions -->
+        <div class="team-card-actions">
+          <button (click)="openEditModal(team)" class="bpt-btn bpt-btn-secondary bpt-btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Editar
+          </button>
+          <button (click)="deleteTeam(team)" class="bpt-btn bpt-btn-danger bpt-btn-sm" title="Excluir Time">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal Create / Edit Team -->
+@if (isModalOpen) {
+  <div class="bpt-modal-overlay" (click)="closeModal()">
+    <div class="bpt-modal-content" (click)="$event.stopPropagation()">
+      <div class="bpt-card-header">
+        <h3 class="font-athletic">{{ isEditing ? 'Editar Time / Dupla' : 'Novo Time / Dupla' }}</h3>
+        <button class="bpt-btn bpt-btn-secondary bpt-btn-sm" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bpt-card-body">
+        <form (ngSubmit)="saveTeam()" class="team-form">
+          <div class="form-group">
+            <label class="bpt-label">Nome do Time / Dupla *</label>
+            <input type="text" [(ngModel)]="teamName" name="teamName" placeholder="Ex: Duda / Ana Patrícia ou Tubarões da Areia" required class="bpt-input" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="bpt-label">Categoria</label>
+              <select [(ngModel)]="teamCategory" name="teamCategory" class="bpt-select">
+                <option value="Dupla (2x2)">Dupla (2x2) - Vôlei de Praia</option>
+                <option value="Trio (3x3)">Trio (3x3)</option>
+                <option value="Quarteto (4x4)">Quarteto (4x4)</option>
+                <option value="Sexteto (6x6)">Sexteto (6x6) - Quadra Tradicional</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Seed Ranking (Posição)</label>
+              <input type="number" min="1" [(ngModel)]="teamSeed" name="teamSeed" class="bpt-input" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="bpt-label">Bandeira / Emoji</label>
+              <input type="text" [(ngModel)]="teamFlag" name="teamFlag" placeholder="🇧🇷" class="bpt-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">Cidade</label>
+              <input type="text" [(ngModel)]="teamCity" name="teamCity" placeholder="Ex: Rio de Janeiro" class="bpt-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="bpt-label">País</label>
+              <input type="text" [(ngModel)]="teamCountry" name="teamCountry" placeholder="Ex: Brasil" class="bpt-input" />
+            </div>
+          </div>
+
+          <!-- Select Players for this team -->
+          <div class="form-group">
+            <label class="bpt-label">Selecione os Atletas para compor o time</label>
+            <div class="players-select-grid">
+              @for (player of state.players(); track player.id) {
+                <div 
+                  class="player-select-item" 
+                  [class.selected]="isPlayerSelected(player.id)"
+                  (click)="togglePlayerSelection(player.id)">
+                  <img [src]="player.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'" class="p-sel-avatar" />
+                  <div class="p-sel-info">
+                    <span class="p-sel-name">{{ player.name }}</span>
+                    <span class="p-sel-pos">{{ player.position }} • {{ player.skillLevel }}★</span>
+                  </div>
+                  <span class="check-box-indicator">
+                    {{ isPlayerSelected(player.id) ? '✓' : '+' }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="modal-actions mt-4">
+            <button type="button" class="bpt-btn bpt-btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="bpt-btn bpt-btn-primary">
+              {{ isEditing ? 'Salvar Alterações' : 'Cadastrar Time' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

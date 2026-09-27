@@ -1,0 +1,478 @@
+### ==============================================================================
+### VOLEIPLAY BACKEND - ARQUIVO DE TESTES HTTP (REST Client / Thunder Client)
+### ==============================================================================
+
+@baseUrlGateway = http://localhost:3000
+@baseUrlHex = http://localhost:3001
+@baseUrlVertical = http://localhost:3002
+@baseUrlCqrs = http://localhost:3003
+
+### ==============================================================================
+### 1. GATEWAY UNIFICADO (Porta 3000)
+### ==============================================================================
+
+### Abrir Dashboard visual no navegador:
+### http://localhost:3000/
+
+### Listar Jogadores via Gateway Hexagonal
+GET {{baseUrlGateway}}/hexagonal/players
+
+### Listar Jogadores via Gateway Vertical Slice
+GET {{baseUrlGateway}}/vertical/players
+
+### Listar Jogadores via Gateway CQRS + Mediator
+GET {{baseUrlGateway}}/cqrs/players
+
+
+### ==============================================================================
+### PERSISTÊNCIA POLIGLOTA & CACHING (PostgreSQL, MongoDB, Redis)
+### ==============================================================================
+
+### [Bancos] 1. Checagem Unificada de Saúde (Postgres, Mongo, Redis, Elasticsearch)
+GET {{baseUrlGateway}}/database/status
+
+### [Bancos] 2. Benchmark Comparativo de Latência (RAM vs Disco)
+GET {{baseUrlGateway}}/database/benchmark
+
+### [Bancos] 3. Cache-Aside Pattern: 1ª Requisição (espera Cache MISS e grava no Redis)
+GET {{baseUrlGateway}}/database/cache-demo/player/p-1
+
+### [Bancos] 4. Cache-Aside Pattern: 2ª Requisição (espera Cache HIT em <1ms via RAM)
+GET {{baseUrlGateway}}/database/cache-demo/player/p-1
+
+### [Bancos] 5. Invalidação Manual de Cache no Redis
+DELETE {{baseUrlGateway}}/database/cache-demo/player/p-1
+
+### [Bancos] 6. Transação ACID no PostgreSQL (Cenário Feliz: COMMIT)
+POST {{baseUrlGateway}}/database/relational/transaction
+Content-Type: application/json
+
+{
+  "amountCents": 50000,
+  "simulateError": false
+}
+
+### [Bancos] 7. Transação ACID no PostgreSQL (Cenário de Erro: ROLLBACK Integral)
+POST {{baseUrlGateway}}/database/relational/transaction
+Content-Type: application/json
+
+{
+  "amountCents": 50000,
+  "simulateError": true
+}
+
+### [Bancos] 8. Inserir Scout NoSQL Complexo / Aninhado no MongoDB
+POST {{baseUrlGateway}}/database/nosql/scout
+Content-Type: application/json
+
+{
+  "tournament": "Superpraia 2026",
+  "teams": {
+    "teamA": { "player1": "Alison Mamute", "player2": "Bruno Schmidt", "score": 2 },
+    "teamB": { "player1": "Evandro Gonçalves", "player2": "Arthur Lanci", "score": 0 }
+  },
+  "advancedStats": {
+    "aces": { "mamute": 7, "bruno": 3 },
+    "blocks": { "mamute": 11, "evandro": 5 },
+    "attackEfficiency": { "mamute": 0.74, "bruno": 0.61 },
+    "sandHeatmapPoints": [
+      { "x": 10, "y": 25, "type": "spike" },
+      { "x": 80, "y": 90, "type": "block" },
+      { "x": 50, "y": 50, "type": "dig" }
+    ]
+  }
+}
+
+### [Bancos] 9. Listar Scouts de Partidas Salvos no MongoDB
+GET {{baseUrlGateway}}/database/nosql/scouts
+
+
+### ==============================================================================
+### 2. ARQUITETURA HEXAGONAL (Ports & Adapters - Porta 3001 ou Gateway /hexagonal)
+### ==============================================================================
+
+### [Hexagonal] 1. Listar jogadores (com filtro)
+GET {{baseUrlGateway}}/hexagonal/players?position=Bloqueador
+
+### [Hexagonal] 2. Obter jogador por ID
+GET {{baseUrlGateway}}/hexagonal/players/p-1
+
+### [Hexagonal] 3. Criar novo jogador
+POST {{baseUrlGateway}}/hexagonal/players
+Content-Type: application/json
+
+{
+  "name": "Alison Cerutti",
+  "nickname": "Mamute",
+  "gender": "M",
+  "position": "Bloqueador",
+  "skillLevel": 5,
+  "height": 203,
+  "dominantHand": "Destro",
+  "bio": "Campeão Olímpico na Rio 2016 e lenda das quadras de areia."
+}
+
+### [Hexagonal] 4. Atualizar jogador
+PUT {{baseUrlGateway}}/hexagonal/players/p-1
+Content-Type: application/json
+
+{
+  "skillLevel": 5,
+  "bio": "Biografia atualizada pelo caso de uso Hexagonal!"
+}
+
+### [Hexagonal] 5. Excluir jogador
+DELETE {{baseUrlGateway}}/hexagonal/players/p-6
+
+
+### ==============================================================================
+### 3. VERTICAL SLICE ARCHITECTURE (Porta 3002 ou Gateway /vertical)
+### ==============================================================================
+
+### [Vertical Slice] 1. Listar jogadores
+GET {{baseUrlGateway}}/vertical/players?search=Duda
+
+### [Vertical Slice] 2. Obter jogador por ID
+GET {{baseUrlGateway}}/vertical/players/p-2
+
+### [Vertical Slice] 3. Criar jogador na fatia vertical
+POST {{baseUrlGateway}}/vertical/players
+Content-Type: application/json
+
+{
+  "name": "Bruno Schmidt",
+  "nickname": "Mágico",
+  "gender": "M",
+  "position": "Defensor",
+  "skillLevel": 5,
+  "height": 185,
+  "dominantHand": "Destro",
+  "bio": "Campeão Olímpico Rio 2016 e mestre da leitura defensiva."
+}
+
+### [Vertical Slice] 4. Atualizar jogador na fatia vertical
+PUT {{baseUrlGateway}}/vertical/players/p-2
+Content-Type: application/json
+
+{
+  "nickname": "Ana Patrícia Paredão",
+  "skillLevel": 5
+}
+
+### [Vertical Slice] 5. Excluir jogador na fatia vertical
+DELETE {{baseUrlGateway}}/vertical/players/p-5
+
+
+### ==============================================================================
+### 4. CQRS COM MEDIATOR (Commands & Queries - Porta 3003 ou Gateway /cqrs)
+### ==============================================================================
+
+### [CQRS] 1. QUERY: Listar jogadores
+GET {{baseUrlGateway}}/cqrs/players
+
+### [CQRS] 2. QUERY: Obter jogador por ID
+GET {{baseUrlGateway}}/cqrs/players/p-3
+
+### [CQRS] 3. COMMAND: Criar jogador (Dispara CreatePlayerCommand no Mediator)
+POST {{baseUrlGateway}}/cqrs/players
+Content-Type: application/json
+
+{
+  "name": "Evandro Gonçalves",
+  "nickname": "Evandro",
+  "gender": "M",
+  "position": "Bloqueador",
+  "skillLevel": 5,
+  "height": 210,
+  "dominantHand": "Destro",
+  "bio": "Dono de um dos saques mais potentes da história do vôlei de praia mundial."
+}
+
+### [CQRS] 4. COMMAND: Atualizar jogador (Dispara UpdatePlayerCommand)
+PUT {{baseUrlGateway}}/cqrs/players/p-3
+Content-Type: application/json
+
+{
+  "bio": "Atualizado via Command Handler com logging automático do Mediator!"
+}
+
+### [CQRS] 5. COMMAND: Excluir jogador (Dispara DeletePlayerCommand)
+DELETE {{baseUrlGateway}}/cqrs/players/p-4
+
+
+### ==============================================================================
+### 5. SAGA PATTERN - TRANSAÇÕES DISTRIBUÍDAS (Porta 3006 ou Gateway /saga)
+### ==============================================================================
+@baseUrlSaga = http://localhost:3006
+
+### [SAGA] 1. Executar Saga com SUCESSO (Happy Path: Cria Lote -> Liquida Batch -> Envia Emails)
+POST {{baseUrlGateway}}/saga/prize-distribution/execute
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-copa-2026",
+  "simulateFailureAt": "none"
+}
+
+### [SAGA] 2. Executar Saga com FALHA NO BATCH (Compensação T1: Cancela o lote pendente)
+POST {{baseUrlGateway}}/saga/prize-distribution/execute
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-copa-2026",
+  "simulateFailureAt": "process_batch"
+}
+
+### [SAGA] 3. Executar Saga com FALHA NO E-MAIL (Compensação Completa: Estorna lote, devolve orçamento e notifica)
+POST {{baseUrlGateway}}/saga/prize-distribution/execute
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-copa-2026",
+  "simulateFailureAt": "send_emails"
+}
+
+### [SAGA] 4. Listar todas as execuções de Sagas e verificar status/timeline
+GET {{baseUrlGateway}}/saga/executions
+
+### [SAGA] 5. Health Check do Orquestrador
+GET {{baseUrlGateway}}/saga/health
+
+
+### ==============================================================================
+### 6. MICROSSERVIÇO DE PROCESSAMENTO DE PRÊMIOS (Porta 3005 ou /services/prizes)
+### ==============================================================================
+@baseUrlPrize = http://localhost:3005
+
+### [Prizes] 1. Listar torneios e orçamentos disponíveis
+GET {{baseUrlGateway}}/services/prizes/tournaments
+
+### [Prizes] 2. Listar todos os lotes de premiação criados
+GET {{baseUrlGateway}}/services/prizes/batches
+
+### [Prizes] 3. Criar lote avulso manualmente (Passo T1 isolado)
+POST {{baseUrlGateway}}/services/prizes/batches
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-copa-2026",
+  "items": [
+    {
+      "playerId": "p-1",
+      "playerName": "Ana Patrícia",
+      "playerEmail": "ana@voleiplay.com.br",
+      "positionWon": "1º Lugar",
+      "amount": 25000
+    },
+    {
+      "playerId": "p-2",
+      "playerName": "Duda Lisboa",
+      "playerEmail": "duda@voleiplay.com.br",
+      "positionWon": "1º Lugar",
+      "amount": 25000
+    }
+  ]
+}
+
+### [Prizes] 4. Processar lote avulso em batch (Passo T2 isolado - use o ID retornado acima)
+# POST {{baseUrlGateway}}/services/prizes/batches/SEU_BATCH_ID/process
+# Content-Type: application/json
+# {}
+
+### [Prizes] 5. Compensar / Estornar lote (Transação Compensatória isolada)
+# POST {{baseUrlGateway}}/services/prizes/batches/SEU_BATCH_ID/compensate
+# Content-Type: application/json
+# { "reason": "Cancelamento manual por auditoria" }
+
+
+### ==============================================================================
+### 7. NOVA EMAIL SERVICE API STANDALONE (Porta 3004 e Gateway /services/email)
+### ==============================================================================
+@baseUrlEmail = http://localhost:3004
+
+### [Email API Direta] 1. Healthcheck do Microsserviço de E-mail
+GET {{baseUrlEmail}}/api/emails/health
+
+### [Email API Direta] 2. Listar e-mails enviados na caixa de saída
+GET {{baseUrlEmail}}/api/emails
+
+### [Email API Direta] 3. Estatísticas de envio
+GET {{baseUrlEmail}}/api/emails/stats
+
+### [Email API Direta] 4. Enviar e-mail de teste individual
+POST {{baseUrlEmail}}/api/emails/send
+Content-Type: application/json
+
+{
+  "to": "aluno@universidade.edu.br",
+  "recipientName": "Aluno de Engenharia de Software",
+  "subject": "Aula de Arquitetura: Teste da Nova API de E-mail",
+  "body": "Este é um e-mail mockado demonstrando o novo backend de e-mails.",
+  "type": "SYSTEM_ALERT"
+}
+
+### [Email API Direta] 5. Enviar lote de e-mails (Endpoint consumido pelo Passo T3 da Saga)
+POST {{baseUrlEmail}}/api/emails/send-batch
+Content-Type: application/json
+
+{
+  "emails": [
+    {
+      "to": "ana@voleiplay.com.br",
+      "recipientName": "Ana Patrícia",
+      "subject": "Premiação Creditada",
+      "body": "Sua premiação foi transferida.",
+      "type": "PRIZE_NOTIFICATION"
+    },
+    {
+      "to": "duda@voleiplay.com.br",
+      "recipientName": "Duda Lisboa",
+      "subject": "Premiação Creditada",
+      "body": "Sua premiação foi transferida.",
+      "type": "PRIZE_NOTIFICATION"
+    }
+  ]
+}
+
+### [Email API Direta] 6. Compensar lote (Endpoint consumido pela Compensação C3 da Saga)
+POST {{baseUrlEmail}}/api/emails/compensate
+Content-Type: application/json
+
+{
+  "originalBatchId": "batch-teste-compensate-01",
+  "reason": "Simulação de estorno manual por auditoria",
+  "recipients": [
+    {
+      "to": "ana@voleiplay.com.br",
+      "recipientName": "Ana Patrícia",
+      "amountToRefund": 25000
+    }
+  ]
+}
+
+### [Email API Direta] 7. Limpar caixa de saída
+DELETE {{baseUrlEmail}}/api/emails
+
+### [Email Gateway Proxy] 8. Consultar Stats através do Gateway principal (Porta 3000 -> Porta 3004)
+GET {{baseUrlGateway}}/services/email/stats
+
+### [Email Gateway Proxy] 9. Listar através do Gateway principal
+GET {{baseUrlGateway}}/services/email
+
+### [Resilience] 10. Consultar Estado do Circuit Breaker do Serviço de E-mail
+GET {{baseUrlGateway}}/services/email/circuit-breaker
+
+### [Resilience] 11. Resetar Manualmente o Circuit Breaker (Voltar para CLOSED)
+POST {{baseUrlGateway}}/services/email/circuit-breaker/reset
+
+
+### ==============================================================================
+### 8. MICROSSERVIÇO DE AUTENTICAÇÃO (Porta 3007 e Gateway /services/auth)
+### ==============================================================================
+@baseUrlAuth = http://localhost:3007
+
+### [Auth API Direta] 1. Healthcheck do Microsserviço de Autenticação
+GET {{baseUrlAuth}}/api/auth/health
+
+### [Auth API Direta] 2. Login com sucesso (Administrador)
+POST {{baseUrlAuth}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@voleiplay.com.br",
+  "password": "admin123"
+}
+
+### [Auth API Direta] 3. Login com sucesso (Atleta)
+POST {{baseUrlAuth}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "ana.patricia@voleiplay.com.br",
+  "password": "atleta123"
+}
+
+### [Auth API Direta] 4. Login com erro (Senha incorreta)
+POST {{baseUrlAuth}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@voleiplay.com.br",
+  "password": "senha_errada"
+}
+
+### [Auth API Direta] 5. Listar usuários cadastrados
+GET {{baseUrlAuth}}/api/auth/users
+
+### [Auth API Direta] 6. Cadastrar novo atleta
+POST {{baseUrlAuth}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Evandro Gonçalves",
+  "email": "evandro@voleiplay.com.br",
+  "password": "atleta123",
+  "role": "ATHLETE",
+  "bio": "Campeão Mundial e lenda do saque viagem nas areias."
+}
+
+### [Auth Gateway Proxy] 7. Login através do Gateway principal (Porta 3000 -> Porta 3007)
+POST {{baseUrlGateway}}/services/auth/login
+Content-Type: application/json
+
+{
+  "email": "duda.lisboa@voleiplay.com.br",
+  "password": "atleta123"
+}
+
+
+### ==============================================================================
+### 8. OBSERVABILIDADE, TELEMETRIA & ELASTIC APM (Portas 3000, 8200, 9200, 5601)
+### ==============================================================================
+@baseUrlApmServer = http://localhost:8200
+@baseUrlElasticsearch = http://localhost:9200
+@baseUrlKibana = http://localhost:5601
+
+### [Observability] 1. Verificar status do Elastic APM Agent
+GET {{baseUrlGateway}}/observability/status
+
+### [Observability] 2. Healthcheck do APM Server (Docker)
+GET {{baseUrlApmServer}}/
+
+### [Observability] 3. Healthcheck do Elasticsearch (Docker)
+GET {{baseUrlElasticsearch}}/
+
+### [Observability] 4. Listar índices do APM no Elasticsearch
+GET {{baseUrlElasticsearch}}/_cat/indices/apm*?v
+
+### [Observability] 5. Lab 1: Simulação de Gargalo com 4 Spans Customizados (Waterfall)
+GET {{baseUrlGateway}}/observability/slow-operation
+
+### [Observability] 6. Lab 2: Simulação de Exceção e Stack Trace Estruturado
+GET {{baseUrlGateway}}/observability/error-simulation?ticketId=TKT-VIP-42&matchId=FINAL-BRASIL-POLONIA
+
+### [Observability] 7. Lab 3: Gerar Carga de Memória e Event Loop (Métricas de Runtime)
+GET {{baseUrlGateway}}/observability/metrics-load
+
+### [Observability] 8. Disparar Saga Feliz (Gera Distributed Tracing com 3 passos)
+POST {{baseUrlGateway}}/saga/prize-distribution/execute
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-telemetria-apm-2026",
+  "simulateFailureAt": "none"
+}
+
+### [Observability] 9. Disparar Saga com Falha e Compensação (Gera Spans de Rollback Semântico e Erro no APM)
+POST {{baseUrlGateway}}/saga/prize-distribution/execute
+Content-Type: application/json
+
+{
+  "tournamentId": "tour-telemetria-falha-2026",
+  "simulateFailureAt": "send_emails"
+}
+
+### [Observability] 10. Consultar eventos de APM salvos no Elasticsearch
+GET {{baseUrlElasticsearch}}/apm-*/_search?size=10
+
+

@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-09-17T18:01:27.454Z",
+  "allCoreHealthy": true,
+  "totalTargets": 9,
+  "onlineCount": 9,
+  "results": [
+    {
+      "name": "Auth Service API",
+      "category": "CORE_MICROSERVICE",
+      "url": "http://localhost:3007/api/auth/health",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 37,
+      "details": "OK (UP)",
+      "timestamp": "2026-09-17T18:01:27.287Z"
+    },
+    {
+      "name": "Email Service API",
+      "category": "CORE_MICROSERVICE",
+      "url": "http://localhost:3004/api/emails/health",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 5,
+      "details": "OK (UP)",
+      "timestamp": "2026-09-17T18:01:27.325Z"
+    },
+    {
+      "name": "Backend Gateway",
+      "category": "GATEWAY",
+      "url": "http://localhost:3000/health",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 5,
+      "details": "OK (UP)",
+      "timestamp": "2026-09-17T18:01:27.330Z"
+    },
+    {
+      "name": "Gateway Proxy -> Auth Stats",
+      "category": "GATEWAY",
+      "url": "http://localhost:3000/services/auth/stats",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 67,
+      "details": "OK (UP)",
+      "timestamp": "2026-09-17T18:01:27.336Z"
+    },
+    {
+      "name": "Gateway -> Circuit Breaker",
+      "category": "GATEWAY",
+      "url": "http://localhost:3000/services/email/circuit-breaker",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 3,
+      "details": "OK (UP)",
+      "timestamp": "2026-09-17T18:01:27.403Z"
+    },
+    {
+      "name": "Angular Frontend DevServer",
+      "category": "FRONTEND",
+      "url": "http://localhost:4200/",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 8,
+      "details": "HTTP 200",
+      "timestamp": "2026-09-17T18:01:27.407Z"
+    },
+    {
+      "name": "Elastic APM Server",
+      "category": "OBSERVABILITY",
+      "url": "http://localhost:8200/",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 8,
+      "details": "HTTP 200",
+      "timestamp": "2026-09-17T18:01:27.415Z"
+    },
+    {
+      "name": "Elasticsearch Engine",
+      "category": "OBSERVABILITY",
+      "url": "http://localhost:9200/",
+      "isUp": true,
+      "statusCode": 200,
+      "latencyMs": 13,
+      "details": "HTTP 200",
+      "timestamp": "2026-09-17T18:01:27.423Z"
+    },
+    {
+      "name": "Kibana Dashboard",
+      "category": "OBSERVABILITY",
+      "url": "http://localhost:5601/",
+      "isUp": true,
+      "statusCode": 302,
+      "latencyMs": 17,
+      "details": "HTTP 302",
+      "timestamp": "2026-09-17T18:01:27.437Z"
+    }
+  ]
+}

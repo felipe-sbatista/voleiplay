@@ -1,0 +1,8 @@
+node_modules
+.git
+.angular
+backend
+auth-service
+email-service
+tests
+k8s

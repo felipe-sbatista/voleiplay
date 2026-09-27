@@ -1,0 +1,102 @@
+<div class="sports-container">
+  <div class="header">
+    <div class="title-area">
+      <h1>Esportes</h1>
+      <p>Gerencie os esportes disponíveis para seus torneios e jogadores</p>
+    </div>
+    <button class="btn-primary" (click)="openForm()">
+      <lucide-icon name="plus" [size]="20"></lucide-icon>
+      Novo Esporte
+    </button>
+  </div>
+
+  <div class="sports-grid" *ngIf="!showForm()">
+    @for (sport of sports(); track sport.id) {
+      <div class="sport-card" [class.is-preset]="sport.isPreset">
+        <div class="card-header">
+          <div class="sport-icon">
+            <lucide-icon [name]="sport.icon" [size]="24"></lucide-icon>
+          </div>
+          <div class="sport-actions" *ngIf="!sport.isPreset">
+            <button class="btn-icon" (click)="openForm(sport)" title="Editar">
+              <lucide-icon name="edit-2" [size]="16"></lucide-icon>
+            </button>
+            <button class="btn-icon btn-danger" (click)="deleteSport(sport.id)" title="Excluir">
+              <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+            </button>
+          </div>
+          <div class="preset-badge" *ngIf="sport.isPreset">Padrão</div>
+        </div>
+        
+        <h3 class="sport-name">{{ sport.name }}</h3>
+        
+        <div class="sport-details">
+          <div class="detail">
+            <span class="label">Jogadores por Time:</span>
+            <span class="value">{{ sport.defaultTeamSize }}</span>
+          </div>
+          <div class="positions">
+            <span class="position-tag" *ngFor="let pos of sport.positions">{{ pos }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Formulário -->
+  <div class="form-card" *ngIf="showForm()">
+    <h2>{{ editingSportId() ? 'Editar Esporte' : 'Novo Esporte' }}</h2>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nome do Esporte</label>
+        <input type="text" [(ngModel)]="formName" placeholder="Ex: Vôlei de Quadra">
+      </div>
+      
+      <div class="form-group">
+        <label>Tamanho do Time (Padrão)</label>
+        <input type="number" [(ngModel)]="formTeamSize" min="1" max="15">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Ícone</label>
+      <div class="icon-selector">
+        <button *ngFor="let icon of availableIcons" 
+                class="icon-btn" 
+                [class.active]="formIcon() === icon.id"
+                (click)="formIcon.set(icon.id)"
+                [title]="icon.label">
+          <lucide-icon [name]="icon.id" [size]="24"></lucide-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Posições dos Jogadores</label>
+      <div class="positions-input">
+        <input type="text" [(ngModel)]="formNewPosition" placeholder="Ex: Atacante" (keyup.enter)="addPosition()">
+        <button class="btn-secondary" (click)="addPosition()">Adicionar</button>
+      </div>
+      <div class="positions-list">
+        <div class="position-tag edit-mode" *ngFor="let pos of formPositions()">
+          {{ pos }}
+          <button class="btn-remove" (click)="removePosition(pos)">
+            <lucide-icon name="x" [size]="14"></lucide-icon>
+          </button>
+        </div>
+        <div class="empty-state" *ngIf="formPositions().length === 0">
+          Nenhuma posição adicionada.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-secondary" (click)="closeForm()">Cancelar</button>
+      <button class="btn-primary" (click)="saveSport()" [disabled]="!formName().trim() || formPositions().length === 0">
+        <lucide-icon name="check" [size]="20"></lucide-icon>
+        Salvar Esporte
+      </button>
+    </div>
+  </div>
+</div>

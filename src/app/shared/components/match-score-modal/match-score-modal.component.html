@@ -1,0 +1,114 @@
+<div class="bpt-modal-overlay" (click)="close.emit()">
+  <div class="bpt-modal-content match-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="match-modal-header">
+      <div class="header-info">
+        <span class="angled-badge badge-volt">{{ match.stageName }}</span>
+        <span class="court-label">{{ match.court || 'Quadra Central' }} • {{ match.scheduledTime || 'Horário a definir' }}</span>
+      </div>
+      <button class="close-btn" (click)="close.emit()" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Teams Face-Off Banner -->
+    <div class="teams-faceoff">
+      <!-- Team 1 -->
+      <div class="team-side team-1" [class.winner]="calculatedSetsWon.team1 > calculatedSetsWon.team2 && isDecided">
+        <div class="team-flag">{{ match.team1?.flag || '🏐' }}</div>
+        <div class="team-name">{{ match.team1?.name || 'Aguardando Time 1' }}</div>
+        <div class="sets-won-pill">{{ calculatedSetsWon.team1 }}</div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <!-- Team 2 -->
+      <div class="team-side team-2" [class.winner]="calculatedSetsWon.team2 > calculatedSetsWon.team1 && isDecided">
+        <div class="sets-won-pill">{{ calculatedSetsWon.team2 }}</div>
+        <div class="team-name">{{ match.team2?.name || 'Aguardando Time 2' }}</div>
+        <div class="team-flag">{{ match.team2?.flag || '🏐' }}</div>
+      </div>
+    </div>
+
+    <!-- Sets Score Editor -->
+    <div class="sets-editor-container">
+      <div class="editor-title">
+        <span>PLACAR DOS SETS</span>
+        <span class="text-muted text-xs">Vôlei de Praia: Sets 1 e 2 até 21 pts | Set 3 (Tie-break) até 15 pts</span>
+      </div>
+
+      <div class="sets-list">
+        @for (set of sets; track set.setNumber; let idx = $index) {
+          <div class="set-row">
+            <div class="set-label">
+              <span>SET {{ set.setNumber }}</span>
+              @if (idx === 2) {
+                <span class="tiebreak-tag">TIE-BREAK</span>
+              }
+            </div>
+
+            <!-- Team 1 Controls -->
+            <div class="score-controls team-1-controls">
+              <button type="button" class="btn-step" (click)="adjustScore(idx, 1, -1)">-</button>
+              <input type="number" min="0" [(ngModel)]="set.team1Score" class="score-input" />
+              <button type="button" class="btn-step btn-plus" (click)="adjustScore(idx, 1, 1)">+</button>
+            </div>
+
+            <div class="score-divider">x</div>
+
+            <!-- Team 2 Controls -->
+            <div class="score-controls team-2-controls">
+              <button type="button" class="btn-step" (click)="adjustScore(idx, 2, -1)">-</button>
+              <input type="number" min="0" [(ngModel)]="set.team2Score" class="score-input" />
+              <button type="button" class="btn-step btn-plus" (click)="adjustScore(idx, 2, 1)">+</button>
+            </div>
+
+            <!-- Remove set if optional 3rd set -->
+            @if (idx === 2) {
+              <button class="btn-remove-set" (click)="removeSet(idx)" title="Remover Tie-Break">×</button>
+            }
+          </div>
+        }
+      </div>
+
+      @if (sets.length < 3) {
+        <button type="button" class="btn-add-set" (click)="addSet()">
+          + Adicionar 3º Set (Tie-Break)
+        </button>
+      }
+    </div>
+
+    <!-- MVP Selection -->
+    <div class="mvp-section">
+      <label class="bpt-label">Destaque da Partida (MVP)</label>
+      <input 
+        type="text" 
+        [(ngModel)]="selectedMvp" 
+        placeholder="Ex: Duda Lisboa ou Anders Mol" 
+        class="bpt-input" 
+      />
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="match-modal-footer">
+      <button type="button" class="bpt-btn bpt-btn-secondary" (click)="close.emit()">
+        Cancelar
+      </button>
+
+      <div class="action-buttons">
+        <button type="button" class="bpt-btn bpt-btn-outline" (click)="saveAsLive()">
+          <span class="live-dot-inline"></span> Marcar Ao Vivo
+        </button>
+        <button type="button" class="bpt-btn bpt-btn-primary" (click)="finishMatch()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Encerrar & Avançar Vencedor
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

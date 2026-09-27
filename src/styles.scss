@@ -1,0 +1,374 @@
+/* ==========================================================================
+   VOLEIPLAY DESIGN SYSTEM - BEACH PRO TOUR (VOLLEYBALL WORLD)
+   ========================================================================== */
+
+:root {
+  /* Core Colors */
+  --bpt-volt: #D4F63D;
+  --bpt-volt-hover: #E2FD52;
+  --bpt-volt-glow: rgba(212, 246, 61, 0.28);
+  --bpt-volt-subtle: rgba(212, 246, 61, 0.12);
+
+  --bpt-coral: #FF4655;
+  --bpt-coral-glow: rgba(255, 70, 85, 0.25);
+  
+  --bpt-cyan: #00F0FF;
+  --bpt-cyan-glow: rgba(0, 240, 255, 0.25);
+
+  --bpt-gold: #FBBF24;
+  --bpt-silver: #E2E8F0;
+  --bpt-bronze: #F97316;
+
+  /* Surfaces & Backgrounds */
+  --bpt-bg-base: #090B0E;
+  --bpt-bg-surface: #10141C;
+  --bpt-bg-card: #161B26;
+  --bpt-bg-card-hover: #1E2535;
+  --bpt-bg-elevated: #242D3F;
+  --bpt-bg-glass: rgba(16, 20, 28, 0.85);
+
+  /* Borders & Dividers */
+  --bpt-border-subtle: rgba(255, 255, 255, 0.08);
+  --bpt-border-medium: rgba(255, 255, 255, 0.16);
+  --bpt-border-volt: rgba(212, 246, 61, 0.45);
+  --bpt-border-coral: rgba(255, 70, 85, 0.45);
+
+  /* Typography Colors */
+  --bpt-text-main: #FFFFFF;
+  --bpt-text-muted: #94A3B8;
+  --bpt-text-dim: #64748B;
+  --bpt-text-dark: #090B0E;
+
+  /* Fonts */
+  --font-athletic: 'Barlow Condensed', -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--bpt-bg-base);
+  color: var(--bpt-text-main);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bpt-bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bpt-bg-elevated);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bpt-text-dim);
+}
+
+/* Athletic Headings */
+.font-athletic {
+  font-family: var(--font-athletic);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.font-mono-sport {
+  font-family: var(--font-mono);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-athletic);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* Angled Cuts & Badges (Beach Pro Tour Signature) */
+.angled-cut-right {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+}
+
+.angled-cut-both {
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+.angled-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-family: var(--font-athletic);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+
+.badge-volt {
+  background-color: var(--bpt-volt);
+  color: var(--bpt-text-dark);
+}
+
+.badge-coral {
+  background-color: var(--bpt-coral);
+  color: #FFFFFF;
+}
+
+.badge-cyan {
+  background-color: var(--bpt-cyan);
+  color: var(--bpt-text-dark);
+}
+
+.badge-outline {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--bpt-border-medium);
+  color: var(--bpt-text-main);
+}
+
+.badge-live {
+  background-color: var(--bpt-coral);
+  color: #FFFFFF;
+  animation: pulse-live 1.8s infinite;
+}
+
+@keyframes pulse-live {
+  0% { box-shadow: 0 0 0 0 rgba(255, 70, 85, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(255, 70, 85, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 70, 85, 0); }
+}
+
+/* Button Variants */
+.bpt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: var(--font-athletic);
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bpt-btn-primary {
+  background-color: var(--bpt-volt);
+  color: var(--bpt-text-dark);
+  box-shadow: 0 4px 16px var(--bpt-volt-glow);
+
+  &:hover {
+    background-color: var(--bpt-volt-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212, 246, 61, 0.4);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.bpt-btn-secondary {
+  background-color: var(--bpt-bg-elevated);
+  color: var(--bpt-text-main);
+  border: 1px solid var(--bpt-border-medium);
+
+  &:hover {
+    background-color: #2D374D;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.bpt-btn-outline {
+  background-color: transparent;
+  color: var(--bpt-volt);
+  border: 1px solid var(--bpt-volt);
+
+  &:hover {
+    background-color: var(--bpt-volt-subtle);
+    border-color: var(--bpt-volt-hover);
+    transform: translateY(-1px);
+  }
+}
+
+.bpt-btn-danger {
+  background-color: rgba(255, 70, 85, 0.15);
+  color: var(--bpt-coral);
+  border: 1px solid rgba(255, 70, 85, 0.4);
+
+  &:hover {
+    background-color: var(--bpt-coral);
+    color: #FFFFFF;
+  }
+}
+
+.bpt-btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.bpt-btn-lg {
+  padding: 14px 28px;
+  font-size: 17px;
+}
+
+/* Card Component */
+.bpt-card {
+  background: var(--bpt-bg-card);
+  border: 1px solid var(--bpt-border-subtle);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-smooth);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, transparent);
+    transition: background var(--transition-smooth);
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: var(--bpt-bg-card-hover);
+
+    &::before {
+      background: linear-gradient(90deg, var(--bpt-volt), transparent);
+    }
+  }
+}
+
+.bpt-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bpt-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bpt-card-body {
+  padding: 20px;
+}
+
+/* Form Inputs */
+.bpt-input, .bpt-select, .bpt-textarea {
+  width: 100%;
+  background-color: var(--bpt-bg-surface);
+  border: 1px solid var(--bpt-border-medium);
+  border-radius: 4px;
+  padding: 10px 14px;
+  color: var(--bpt-text-main);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+
+  &:focus {
+    border-color: var(--bpt-volt);
+    box-shadow: 0 0 0 2px var(--bpt-volt-subtle);
+  }
+
+  &::placeholder {
+    color: var(--bpt-text-dim);
+  }
+}
+
+.bpt-label {
+  display: block;
+  font-family: var(--font-athletic);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--bpt-text-muted);
+  margin-bottom: 6px;
+}
+
+/* Modal Backdrop & Dialog */
+.bpt-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.bpt-modal-content {
+  background: var(--bpt-bg-card);
+  border: 1px solid var(--bpt-border-medium);
+  border-top: 3px solid var(--bpt-volt);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  animation: slideUp 0.25s var(--transition-bounce);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Grid Utility */
+.bpt-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 1024px) {
+  .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-4, .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
+}

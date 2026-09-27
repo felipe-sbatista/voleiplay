@@ -1,0 +1,535 @@
+{
+  "info": {
+    "name": "Voleiplay Beach Pro Tour - API Collection",
+    "_postman_id": "voleiplay-api-collection-v1",
+    "description": "Coleção completa de endpoints REST para os microsserviços do Voleiplay (Auth Service, Email Service e Backend Gateway). Inclui testes automatizados de asserção (pm.test) e propagação dinâmica de variáveis de ambiente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "auth_url",
+      "value": "http://localhost:3007",
+      "type": "string"
+    },
+    {
+      "key": "email_url",
+      "value": "http://localhost:3004",
+      "type": "string"
+    },
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 1. Auth Service (Porta 3007)",
+      "item": [
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/api/auth/health",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code é 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Serviço está UP', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('UP');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Atleta (Ana Patrícia)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.patricia@voleiplay.com.br\",\n  \"password\": \"atleta123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/api/auth/login",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login bem-sucedido (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var data = pm.response.json();",
+                  "    pm.expect(data.success).to.be.true;",
+                  "    pm.expect(data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Admin (Diretor BPT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@voleiplay.com.br\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/api/auth/login",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login de Admin com sucesso', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(pm.response.json().user.role).to.eql('ADMIN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Credenciais Inválidas (Rejeição 401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.patricia@voleiplay.com.br\",\n  \"password\": \"senha_incorreta\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/api/auth/login",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Rejeitado com status 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cadastro de Novo Usuário (com disparo de e-mail mock)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alison Cerutti\",\n  \"email\": \"alison.postman@voleiplay.com.br\",\n  \"password\": \"mamute123\",\n  \"role\": \"ATHLETE\",\n  \"bio\": \"Campeão Olímpico Rio 2016\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/api/auth/register",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cadastro criado com sucesso (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var data = pm.response.json();",
+                  "    pm.expect(data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validar Sessão / Me (com Bearer Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/api/auth/me",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sessão válida (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(pm.response.json().user.email).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/api/auth/users",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "users"]
+            }
+          }
+        },
+        {
+          "name": "Estatísticas de Usuários & Sessões",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/api/auth/stats",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Logout (Encerrar Sessão)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/api/auth/logout",
+              "host": ["{{auth_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Logout com status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📧 2. Email Service (Porta 3004)",
+      "item": [
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{email_url}}/api/emails/health",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "health"]
+            }
+          }
+        },
+        {
+          "name": "Enviar E-mail Avulso (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"duda.lisboa@voleiplay.com.br\",\n  \"recipientName\": \"Eduarda (Duda) Lisboa\",\n  \"subject\": \"🏐 Convocação Etapa Paris Elite 16\",\n  \"body\": \"Parabéns! Sua dupla está confirmada como cabeça de chave número 1 do torneio.\",\n  \"type\": \"SYSTEM_ALERT\"\n}"
+            },
+            "url": {
+              "raw": "{{email_url}}/api/emails/send",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "send"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E-mail enviado com status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.email.status).to.eql('SENT');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Enviar E-mail com Falha Simulada (Status 500)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"erro.simulado@voleiplay.com\",\n  \"recipientName\": \"Falha de Teste\",\n  \"subject\": \"E-mail que irá falhar\",\n  \"body\": \"Teste de falha no servidor SMTP\",\n  \"simulateFailure\": true\n}"
+            },
+            "url": {
+              "raw": "{{email_url}}/api/emails/send",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "send"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Falha simulada capturada (500)', function () {",
+                  "    pm.response.to.have.status(500);",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Enviar Lote de E-mails (Batch)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batchId\": \"batch-postman-01\",\n  \"emails\": [\n    {\n      \"to\": \"ana.patricia@voleiplay.com.br\",\n      \"recipientName\": \"Ana Patrícia\",\n      \"subject\": \"🏐 Notificação de Torneio\",\n      \"body\": \"Seu próximo jogo será na quadra central às 14:00.\"\n    },\n    {\n      \"to\": \"duda.lisboa@voleiplay.com.br\",\n      \"recipientName\": \"Duda Lisboa\",\n      \"subject\": \"🏐 Notificação de Torneio\",\n      \"body\": \"Seu próximo jogo será na quadra central às 14:00.\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{email_url}}/api/emails/send-batch",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "send-batch"]
+            }
+          }
+        },
+        {
+          "name": "Consultar Caixa de Saída (Outbox)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{email_url}}/api/emails",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Outbox retornada com sucesso', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.total).to.be.at.least(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Estatísticas do Serviço de E-mail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{email_url}}/api/emails/stats",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Compensação de Lote (Saga Pattern - Estorno)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"originalBatchId\": \"batch-saga-fail\",\n  \"recipients\": [\n    {\n      \"to\": \"ana.patricia@voleiplay.com.br\",\n      \"recipientName\": \"Ana Patrícia\"\n    }\n  ],\n  \"reason\": \"Inconsistência identificada na pontuação oficial do torneio\"\n}"
+            },
+            "url": {
+              "raw": "{{email_url}}/api/emails/compensate",
+              "host": ["{{email_url}}"],
+              "path": ["api", "emails", "compensate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🌐 3. Backend Gateway & Resiliência (Porta 3000)",
+      "item": [
+        {
+          "name": "Gateway Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Status do Circuit Breaker (E-mail Service)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/services/email/circuit-breaker",
+              "host": ["{{gateway_url}}"],
+              "path": ["services", "email", "circuit-breaker"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Circuit Breaker consultado com sucesso', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var cb = pm.response.json().circuitBreaker;",
+                  "    pm.expect(cb.name).to.eql('EmailServiceAPI');",
+                  "    pm.expect(['CLOSED', 'OPEN', 'HALF_OPEN']).to.include(cb.state);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resetar Circuit Breaker",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/services/email/circuit-breaker/reset",
+              "host": ["{{gateway_url}}"],
+              "path": ["services", "email", "circuit-breaker", "reset"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Circuito resetado para CLOSED', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(pm.response.json().circuitBreaker.state).to.eql('CLOSED');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Proxy Gateway -> Auth Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/services/auth/stats",
+              "host": ["{{gateway_url}}"],
+              "path": ["services", "auth", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Proxy Gateway -> Login Atleta",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.patricia@voleiplay.com.br\",\n  \"password\": \"atleta123\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/services/auth/login",
+              "host": ["{{gateway_url}}"],
+              "path": ["services", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Proxy Gateway -> Enviar E-mail Protegido por Circuit Breaker",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"teste.gateway@voleiplay.com.br\",\n  \"recipientName\": \"Atleta Gateway\",\n  \"subject\": \"Teste via Gateway Resiliente\",\n  \"body\": \"Chamada roteada pela porta 3000 com Circuit Breaker e Retry com Backoff.\",\n  \"type\": \"SYSTEM_ALERT\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/services/email/send",
+              "host": ["{{gateway_url}}"],
+              "path": ["services", "email", "send"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

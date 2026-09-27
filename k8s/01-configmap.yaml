@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: voleiplay-config
+  namespace: voleiplay-k8s
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  POSTGRES_HOST: "voleiplay-postgres"
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgrespassword"
+  POSTGRES_DB: "voleiplay"
+  REDIS_HOST: "voleiplay-redis"
+  REDIS_PORT: "6379"
+  MONGO_URI: "mongodb://voleiplay-mongodb:27017/voleiplay"
+  AUTH_SERVICE_URL: "http://voleiplay-auth:3007"
+  EMAIL_SERVICE_URL: "http://voleiplay-email:3004"
+  ELASTIC_APM_SERVER_URL: "http://host.minikube.internal:8200"
+  ELASTIC_APM_ACTIVE: "false"

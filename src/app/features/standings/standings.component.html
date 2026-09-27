@@ -1,0 +1,142 @@
+<div class="standings-page">
+  <!-- Page Header -->
+  <div class="page-top-bar">
+    <div class="page-title-box">
+      <span class="angled-badge badge-volt">LEADERBOARD OFICIAL</span>
+      <h1>Tabela de Classificação & Pódio</h1>
+      <p class="page-sub">Ranking geral por vitórias, saldo de sets e pontuação do Beach Pro Tour</p>
+    </div>
+
+    <div class="top-actions">
+      <button (click)="triggerConfetti()" class="bpt-btn bpt-btn-primary bpt-btn-lg">
+        🎉 Celebrar Campeões!
+      </button>
+    </div>
+  </div>
+
+  <!-- 3D Sport Podium Section -->
+  @if (state.leaderboard().length >= 3) {
+    <div class="podium-section">
+      <!-- 2nd Place (Silver) -->
+      @if (state.leaderboard()[1]; as silver) {
+        <div class="podium-col silver-col">
+          <div class="podium-team-card">
+            <span class="medal-badge silver-medal">🥈 2º LUGAR</span>
+            <div class="podium-flag">{{ silver.flag }}</div>
+            <h3 class="podium-name">{{ silver.name }}</h3>
+            <span class="podium-stats">{{ silver.stats.wins }}V • {{ silver.stats.tournamentPoints }} pts</span>
+          </div>
+          <div class="podium-block block-silver">
+            <span class="podium-number font-athletic">2</span>
+            <span class="podium-tier font-athletic">PRATA</span>
+          </div>
+        </div>
+      }
+
+      <!-- 1st Place (Gold Champion) -->
+      @if (state.leaderboard()[0]; as gold) {
+        <div class="podium-col gold-col">
+          <div class="podium-team-card gold-glow">
+            <div class="crown-icon">👑</div>
+            <span class="medal-badge gold-medal">🥇 CAMPEÃO OURO</span>
+            <div class="podium-flag">{{ gold.flag }}</div>
+            <h3 class="podium-name">{{ gold.name }}</h3>
+            <span class="podium-stats">{{ gold.stats.wins }}V • {{ gold.stats.tournamentPoints }} pts</span>
+          </div>
+          <div class="podium-block block-gold">
+            <span class="podium-number font-athletic">1</span>
+            <span class="podium-tier font-athletic">OURO</span>
+          </div>
+        </div>
+      }
+
+      <!-- 3rd Place (Bronze) -->
+      @if (state.leaderboard()[2]; as bronze) {
+        <div class="podium-col bronze-col">
+          <div class="podium-team-card">
+            <span class="medal-badge bronze-medal">🥉 3º LUGAR</span>
+            <div class="podium-flag">{{ bronze.flag }}</div>
+            <h3 class="podium-name">{{ bronze.name }}</h3>
+            <span class="podium-stats">{{ bronze.stats.wins }}V • {{ bronze.stats.tournamentPoints }} pts</span>
+          </div>
+          <div class="podium-block block-bronze">
+            <span class="podium-number font-athletic">3</span>
+            <span class="podium-tier font-athletic">BRONZE</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Official Standings Table -->
+  <div class="table-container bpt-card">
+    <div class="table-header-bar">
+      <div class="th-left">
+        <span class="angled-badge badge-volt">CLASSIFICAÇÃO GERAL</span>
+        <h3>Pontuação Cumulativa</h3>
+      </div>
+      <span class="table-legend">Critérios: Vitórias (V) > Saldo de Sets (SD) > Ratio de Pontos</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="bpt-table">
+        <thead>
+          <tr>
+            <th class="th-pos">POS</th>
+            <th class="th-team">TIME / DUPLA</th>
+            <th class="th-cat">CATEGORIA</th>
+            <th>J</th>
+            <th>V</th>
+            <th>D</th>
+            <th>SP</th>
+            <th>SC</th>
+            <th>SD</th>
+            <th>PP</th>
+            <th>PC</th>
+            <th>RATIO</th>
+            <th class="th-pts">PTS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (team of state.leaderboard(); track team.id; let idx = $index) {
+            <tr [class.gold-row]="idx === 0" [class.silver-row]="idx === 1" [class.bronze-row]="idx === 2">
+              <td class="td-pos">
+                <span class="rank-chip" [class.chip-1]="idx === 0" [class.chip-2]="idx === 1" [class.chip-3]="idx === 2">
+                  {{ idx + 1 }}º
+                </span>
+              </td>
+              <td class="td-team">
+                <div class="team-cell">
+                  <span class="cell-flag">{{ team.flag || '🏐' }}</span>
+                  <div class="cell-team-info">
+                    <span class="cell-name">{{ team.name }}</span>
+                    <span class="cell-roster">
+                      @for (p of team.players; track p.id; let last = $last) {
+                        {{ p.nickname || p.name }}{{ !last ? ' / ' : '' }}
+                      }
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td class="td-cat">
+                <span class="angled-badge badge-outline text-xs">{{ team.category }}</span>
+              </td>
+              <td>{{ team.stats.matches }}</td>
+              <td class="text-volt font-bold">{{ team.stats.wins }}</td>
+              <td>{{ team.stats.losses }}</td>
+              <td>{{ team.stats.setsWon }}</td>
+              <td>{{ team.stats.setsLost }}</td>
+              <td [class.text-green]="team.stats.setsWon - team.stats.setsLost > 0">
+                {{ team.stats.setsWon - team.stats.setsLost > 0 ? '+' : '' }}{{ team.stats.setsWon - team.stats.setsLost }}
+              </td>
+              <td>{{ team.stats.pointsFor }}</td>
+              <td>{{ team.stats.pointsAgainst }}</td>
+              <td class="font-mono">{{ team.stats.pointsRatio || '1.0' }}</td>
+              <td class="td-pts font-mono font-bold">{{ team.stats.tournamentPoints }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

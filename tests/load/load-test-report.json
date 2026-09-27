@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-09-17T17:50:03.075Z",
+  "results": [
+    {
+      "name": "1. Autenticação Concorrente (Auth Service /api/auth/login)",
+      "totalRequests": 200,
+      "successful": 200,
+      "failed": 0,
+      "errorRatePercent": 0,
+      "durationSeconds": 0.61,
+      "rps": 329.73,
+      "latencies": {
+        "min": 2.89,
+        "max": 133.21,
+        "avg": 53.79,
+        "p50": 55.21,
+        "p90": 86.16,
+        "p95": 111.29,
+        "p99": 113.84
+      },
+      "passedSla": true
+    },
+    {
+      "name": "2. Envio de E-mails em Alta Frequência (Email Service /api/emails/send)",
+      "totalRequests": 250,
+      "successful": 250,
+      "failed": 0,
+      "errorRatePercent": 0,
+      "durationSeconds": 0.63,
+      "rps": 399.41,
+      "latencies": {
+        "min": 2.22,
+        "max": 149.4,
+        "avg": 60.15,
+        "p50": 56.36,
+        "p90": 119.1,
+        "p95": 125.59,
+        "p99": 147.44
+      },
+      "passedSla": true
+    },
+    {
+      "name": "3. Gateway Proxy & Circuit Breaker (Gateway /services/email/circuit-breaker)",
+      "totalRequests": 300,
+      "successful": 300,
+      "failed": 0,
+      "errorRatePercent": 0,
+      "durationSeconds": 0.76,
+      "rps": 394.87,
+      "latencies": {
+        "min": 22.1,
+        "max": 554.33,
+        "avg": 70.95,
+        "p50": 48.86,
+        "p90": 101.74,
+        "p95": 210.63,
+        "p99": 443.34
+      },
+      "passedSla": true
+    }
+  ]
+}

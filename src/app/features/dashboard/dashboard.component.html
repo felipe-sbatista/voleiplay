@@ -1,0 +1,278 @@
+<div class="dashboard-page">
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tags">
+        <span class="angled-badge badge-volt">ETAPA ELITE 16</span>
+        <span class="angled-badge badge-outline">{{ state.tournament().category }}</span>
+        <span class="angled-badge badge-coral">{{ state.tournament().season }}</span>
+      </div>
+
+      <h1 class="hero-title">
+        {{ state.tournament().name }}
+        <span class="hero-subtitle">{{ state.tournament().subtitle }}</span>
+      </h1>
+
+      <p class="hero-location">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        {{ state.tournament().location }} • Fase Atual: <strong>{{ state.tournament().currentStage }}</strong>
+      </p>
+
+      <!-- Quick Action CTA Buttons -->
+      <div class="hero-actions">
+        <a routerLink="/team-draw" class="bpt-btn bpt-btn-primary bpt-btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          Sorteador de Times
+        </a>
+        <a routerLink="/brackets" class="bpt-btn bpt-btn-outline bpt-btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="18" r="3"></circle>
+            <circle cx="6" cy="6" r="3"></circle>
+            <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+            <line x1="6" y1="9" x2="6" y2="21"></line>
+          </svg>
+          Ver Chaves do Torneio
+        </a>
+        <a routerLink="/teams" class="bpt-btn bpt-btn-secondary">
+          + Cadastrar Time
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics Grid -->
+  <section class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-icon volt-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-number">{{ state.tournamentStats().totalTeams }}</span>
+        <span class="stat-label">Times / Duplas</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon cyan-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 1 0-16 0"></path></svg>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-number">{{ state.tournamentStats().totalPlayers }}</span>
+        <span class="stat-label">Atletas Inscritos</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon coral-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-number">{{ state.tournamentStats().finishedMatches }}/{{ state.tournamentStats().totalMatches }}</span>
+        <span class="stat-label">Jogos Concluídos</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon gold-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      </div>
+      <div class="stat-meta">
+        <span class="stat-number">{{ state.tournamentStats().totalPointsScored }}</span>
+        <span class="stat-label">Pontos Marcados</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content 2-Column Section -->
+  <div class="dashboard-grid">
+    <!-- Left Column: Live & Upcoming Matches -->
+    <div class="dashboard-col main-col">
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          </svg>
+          <h2>Partidas em Destaque & Ao Vivo</h2>
+        </div>
+        <a routerLink="/brackets" class="bpt-link">Ver Chave Completa →</a>
+      </div>
+
+      <div class="matches-list">
+        @if (liveAndUpcomingMatches.length === 0) {
+          <div class="empty-state">
+            <p>Nenhuma partida agendada no momento.</p>
+            <a routerLink="/brackets" class="bpt-btn bpt-btn-primary bpt-btn-sm">Gerar Chave</a>
+          </div>
+        }
+
+        @for (m of liveAndUpcomingMatches; track m.id) {
+          <div class="match-card-bpt" [class.is-live]="m.status === 'live'">
+            <div class="match-card-top">
+              <span class="angled-badge" [class.badge-live]="m.status === 'live'" [class.badge-outline]="m.status !== 'live'">
+                @if (m.status === 'live') {
+                  <span class="live-dot"></span> AO VIVO
+                } @else {
+                  AGENDADO
+                }
+              </span>
+              <span class="match-stage-info">{{ m.stageName }} • {{ m.court }} • {{ m.scheduledTime }}</span>
+            </div>
+
+            <div class="match-teams-row">
+              <!-- Team 1 -->
+              <div class="match-team">
+                <div class="flag-icon">{{ m.team1?.flag || '🏐' }}</div>
+                <div class="name-box">
+                  <span class="team-title">{{ m.team1?.name || 'A definir' }}</span>
+                  <span class="player-roster">
+                    @for (p of m.team1?.players; track p.id; let last = $last) {
+                      {{ p.nickname || p.name }}{{ !last ? ' / ' : '' }}
+                    }
+                  </span>
+                </div>
+                <div class="set-score-pill">{{ m.team1Sets }}</div>
+              </div>
+
+              <div class="divider-vs">VS</div>
+
+              <!-- Team 2 -->
+              <div class="match-team">
+                <div class="set-score-pill">{{ m.team2Sets }}</div>
+                <div class="name-box text-right">
+                  <span class="team-title">{{ m.team2?.name || 'A definir' }}</span>
+                  <span class="player-roster">
+                    @for (p of m.team2?.players; track p.id; let last = $last) {
+                      {{ p.nickname || p.name }}{{ !last ? ' / ' : '' }}
+                    }
+                  </span>
+                </div>
+                <div class="flag-icon">{{ m.team2?.flag || '🏐' }}</div>
+              </div>
+            </div>
+
+            <!-- Set scores if available -->
+            @if (m.sets && m.sets.length > 0) {
+              <div class="sets-history-row">
+                <span class="sets-label">Parciais:</span>
+                @for (s of m.sets; track s.setNumber) {
+                  <span class="set-chip">Set {{ s.setNumber }}: <strong>{{ s.team1Score }}-{{ s.team2Score }}</strong></span>
+                }
+              </div>
+            }
+
+            <div class="match-card-actions">
+              <button class="bpt-btn bpt-btn-primary bpt-btn-sm" (click)="openScoreModal(m)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Atualizar Placar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Recent Results -->
+      @if (recentFinishedMatches.length > 0) {
+        <div class="section-header mt-8">
+          <div class="section-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <h2>Resultados Recentes</h2>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          @for (m of recentFinishedMatches; track m.id) {
+            <div class="result-card">
+              <div class="result-stage">{{ m.stageName }}</div>
+              <div class="result-teams">
+                <div class="res-team" [class.winner]="m.winnerId === m.team1Id">
+                  <span>{{ m.team1?.flag }} {{ m.team1?.name }}</span>
+                  <strong>{{ m.team1Sets }}</strong>
+                </div>
+                <div class="res-team" [class.winner]="m.winnerId === m.team2Id">
+                  <span>{{ m.team2?.flag }} {{ m.team2?.name }}</span>
+                  <strong>{{ m.team2Sets }}</strong>
+                </div>
+              </div>
+              @if (m.mvpPlayerName) {
+                <div class="result-mvp">
+                  ⭐ MVP: <strong>{{ m.mvpPlayerName }}</strong>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Right Column: Leaderboard & Quick Tools -->
+    <div class="dashboard-col side-col">
+      <!-- Leaderboard Widget -->
+      <div class="bpt-card">
+        <div class="bpt-card-header">
+          <h3 class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M14 6v8a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2V6"></path>
+            </svg>
+            Classificação do Torneio
+          </h3>
+          <a routerLink="/standings" class="bpt-link">Completa</a>
+        </div>
+
+        <div class="leaderboard-mini-list">
+          @for (team of state.leaderboard().slice(0, 5); track team.id; let rank = $index) {
+            <div class="leader-item">
+              <div class="rank-badge" [class.rank-1]="rank === 0" [class.rank-2]="rank === 1" [class.rank-3]="rank === 2">
+                {{ rank + 1 }}º
+              </div>
+              <div class="leader-info">
+                <span class="leader-name">{{ team.flag }} {{ team.name }}</span>
+                <span class="leader-stats">V: {{ team.stats.wins }} • Sets: {{ team.stats.setsWon }}-{{ team.stats.setsLost }} • Ratio: {{ team.stats.pointsRatio }}</span>
+              </div>
+              <div class="leader-pts">{{ team.stats.tournamentPoints }} pts</div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Quick Draw Card Banner -->
+      <div class="draw-promo-card">
+        <div class="draw-promo-icon">🎲</div>
+        <div class="draw-promo-body">
+          <h4 class="draw-promo-title">Precisa sortear os times do racha?</h4>
+          <p class="draw-promo-text">Use nosso sorteador balanceado por estrelas para duplas (2x2), quartetos ou sextetos.</p>
+          <a routerLink="/team-draw" class="bpt-btn bpt-btn-primary bpt-btn-sm mt-3">
+            Abrir Sorteador
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Score Modal -->
+@if (selectedMatch) {
+  <app-match-score-modal 
+    [match]="selectedMatch" 
+    (close)="closeScoreModal()" 
+    (matchUpdated)="closeScoreModal()">
+  </app-match-score-modal>
+}
