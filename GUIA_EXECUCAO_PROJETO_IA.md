@@ -232,6 +232,69 @@ Armazene o documento gerado em `plans/implementacao.md` e faça o commit inicial
 
 Construa a infraestrutura completa de containers do projeto, entendendo a finalidade de cada instrução.
 
+### Ação 4.0: Instalar e Validar o Docker no Sistema Operacional
+
+Antes de criar arquivos de configuração de containers, instale o Docker Engine e o Docker Compose de acordo com o seu sistema operacional:
+
+#### 1. No Windows (Recomendado via Terminal com winget):
+1. Abra o PowerShell como Administrador e instale o **Docker Desktop**:
+   ```powershell
+   winget install -e --id Docker.DockerDesktop
+   ```
+   *(Ou baixe manualmente o instalador oficial em [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/))*.
+2. Caso o WSL 2 (Windows Subsystem for Linux) ainda não esteja habilitado, ative-o executando:
+   ```powershell
+   wsl --install
+   wsl --update
+   ```
+3. Reinicie o computador caso solicitado pelo instalador.
+4. Abra o **Docker Desktop** pelo menu Iniciar, aceite os termos de serviço e certifique-se de que a opção **"Use the WSL 2 based engine"** esteja marcada em *Settings -> General*.
+
+#### 2. No Linux (Ubuntu / Debian):
+Execute os comandos no terminal para instalar o Docker Engine oficial e o plugin Compose:
+```bash
+# 1. Remover pacotes antigos conflitantes
+for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+# 2. Configurar o repositório oficial do Docker
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 3. Instalar o Docker Engine e Compose
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 4. Habilitar o Docker para rodar sem sudo (opcional, recomendado)
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+#### 3. No macOS:
+Instale via Homebrew ou instalador oficial:
+```bash
+brew install --cask docker
+```
+Abra o aplicativo **Docker** na pasta Aplicativos para iniciar o daemon.
+
+#### 4. Validar a Instalação do Docker:
+Execute os comandos abaixo no terminal e confirme que as versões são exibidas e o container de teste roda com sucesso:
+
+```bash
+docker --version
+docker compose version
+docker run --rm hello-world
+```
+
+---
+
 ### Ação 4.1: Construir o Dockerfile Multi-Stage do Frontend
 Crie o arquivo `Dockerfile.frontend` aplicando a técnica de múltiplos estágios para otimizar tamanho e segurança:
 
@@ -534,6 +597,7 @@ Antes de submeter o projeto, execute e valide cada um dos itens abaixo:
 - [ ] Brand Identity System Poster gerado e documentado.
 - [ ] Transcrição da sabatina técnica com a IA contendo a justificativa da escolha do banco de dados (SQL, NoSQL e/ou Cache).
 - [ ] Plano de implementação TDD (`plans/implementacao.md`) aprovado e versionado no Git.
+- [ ] Docker Engine e Docker Compose instalados e validados com `docker run --rm hello-world`.
 - [ ] `docker compose up -d` executado com todos os serviços em estado `healthy`.
 - [ ] Testes Unitários executados e passando verde (`npm run test:unit`).
 - [ ] Testes Funcionais em formato Gherkin passando verde (`npm run test:functional`).
