@@ -1,17 +1,17 @@
-# 🏐 Guia de Execução: Engenharia de Software Guiada por Agentes de IA
-## Da Concepção Visual à Suíte de Testes 5 Estrelas no Voleiplay
+# 🚀 Guia de Execução: Construção de Software do Zero com Agentes de IA
+## Da Identidade Visual à Suíte de Testes 5 Estrelas
 
-Este roteiro estabelece o fluxo metódico de engenharia de software utilizando agentes inteligentes. Siga rigorosamente cada etapa, mantendo o controle técnico sobre o agente e validando cada decisão arquitetural e linha de código gerada.
+Este roteiro estabelece o fluxo metódico de engenharia de software para construir uma aplicação completa **do zero** utilizando agentes inteligentes de IA. Siga rigorosamente cada etapa, exercendo controle técnico sobre o agente e validando cada decisão arquitetural, container e linha de código gerada.
 
 ---
 
 ## 📑 Sumário de Execução
 
 0. [Fase 0: Instalação e Gerenciamento de Skills do Agente](#fase-0-instalação-e-gerenciamento-de-skills-do-agente)
-1. [Fase 1: Design System, Criação de Logo SVG e Contratos (Design First)](#fase-1-design-system-criação-de-logo-svg-e-contratos-design-first)
-2. [Fase 2: Sabatina Técnica e Decisão de Banco de Dados (Grill & Brainstorm)](#fase-2-sabatina-técnica-e-decisão-de-banco-de-dados-grill--brainstorm)
+1. [Fase 1: Identidade Visual, Logo SVG e Brand Guidelines (Design First)](#fase-1-identidade-visual-logo-svg-e-brand-guidelines-design-first)
+2. [Fase 2: Concepção de Requisitos e Decisão do Banco de Dados (Grill & Brainstorm)](#fase-2-concepção-de-requisitos-e-decisão-do-banco-de-dados-grill--brainstorm)
 3. [Fase 3: Planejamento Arquitetural Estruturado (Writing Plans)](#fase-3-planejamento-arquitetural-estruturado-writing-plans)
-4. [Fase 4: Infraestrutura & Orquestração Docker (Hands-on)](#fase-4-infraestrutura--orquestração-docker-hands-on)
+4. [Fase 4: Infraestrutura & Containerização Docker do Zero (Hands-on)](#fase-4-infraestrutura--containerização-docker-do-zero-hands-on)
 5. [Fase 5: Execução Controlada e Implementação (Execute Plans)](#fase-5-execução-controlada-e-implementação-execute-plans)
 6. [Fase 6: Construção da Suíte de Testes 5 Estrelas](#fase-6-construção-da-suíte-de-testes-5-estrelas)
 7. [Checklist Final de Entrega](#checklist-final-de-entrega)
@@ -22,19 +22,19 @@ Este roteiro estabelece o fluxo metódico de engenharia de software utilizando a
 
 As skills são pacotes padronizados de instruções, referências e ferramentas que estendem as capacidades do agente de IA para tarefas de engenharia de alta complexidade. 
 
-O projeto Voleiplay utiliza o gerenciador de skills oficial (`npx skills`) e integra repositórios externos para capacidades avançadas de design vetorial e descoberta de habilidades.
+O projeto adota o gerenciador de skills oficial (`npx skills`) e integra repositórios da comunidade para capacidades avançadas de design vetorial e descoberta de ferramentas.
 
 ### Ação 0.1: Instalar a Skill de Design Vetorial (`svg-design`)
-Instale a skill `svg-design` diretamente a partir do repositório oficial [tryopendata/skills](https://github.com/tryopendata/skills). Ela capacita o agente a gerar código SVG puro, otimizado e semanticamente correto para logos, ícones e gráficos vetoriais esportivos:
+Instale a skill `svg-design` diretamente a partir do repositório oficial [tryopendata/skills](https://github.com/tryopendata/skills). Ela capacita o agente a gerar código SVG puro, otimizado e semanticamente correto para logos, ícones e assets gráficos do seu novo software:
 
 ```powershell
 npx skills add https://github.com/tryopendata/skills --skill svg-design -y
 ```
 
-> **Verificação:** Confirme que o diretório `.agents/skills/svg-design/` foi criado contendo o arquivo `SKILL.md` e referências especializadas em geometria, curvas Bézier e animação vetorial.
+> **Verificação:** Confirme que o diretório `.agents/skills/svg-design/` foi criado no workspace contendo o arquivo `SKILL.md` e referências especializadas em geometria, curvas Bézier e viewBox.
 
 ### Ação 0.2: Instalar a Skill de Descoberta de Habilidades (`find-skills`)
-Instale a skill `find-skills` para permitir que o agente localize dinamicamente pacotes adicionais para novas necessidades técnicas:
+Instale a skill `find-skills` para permitir que o agente localize e sugira pacotes adicionais conforme a necessidade do projeto:
 
 ```powershell
 npx skills add vercel-labs/skills --skill find-skills -y
@@ -48,123 +48,195 @@ npx skills experimental_install
 ```
 
 ### Ação 0.4: Mapear as Skills de Governança do Agente
-Certifique-se de que o agente utilize as skills de fluxo em cada etapa:
+Certifique-se de acionar as skills de fluxo em cada fase do ciclo de desenvolvimento:
 * **`svg-design`** (de `tryopendata/skills`): Criação da logo vetorial e iconografia do sistema.
-* **`grill-with-docs`** (ou `/grill-me`): Sabatina crítica baseada na documentação para travar premissas.
-* **`brainstorming`**: Análise de hipóteses e comparação de trade-offs de engenharia.
+* **`grill-with-docs`** (ou `/grill-with-docs`): Sabatina crítica para travar requisitos e guiar a arquitetura de persistência.
+* **`brainstorming`**: Análise de alternativas e comparação de trade-offs de engenharia.
 * **`writing-plans`** (ou `/plan`): Formulação do plano atômico de implementação TDD.
 * **`execute-plans`** (ou `/goal`): Implementação metódica passo a passo orientada aos testes.
 
 ---
 
-## Fase 1: Design System, Criação de Logo SVG e Contratos (Design First)
+## Fase 1: Identidade Visual, Logo SVG e Brand Guidelines (Design First)
 
-Não inicie a implementação de backend ou regras de negócio antes de definir a identidade visual, os contratos de interface e a comunicação de dados.
+Não inicie a implementação de backend ou regras de negócio antes de definir a identidade visual, a logo oficial e os contratos de interface.
 
-### Ação 1.1: Criar a Logo Vetorial do Voleiplay com a Skill `svg-design`
-Execute o prompt abaixo para acionar a skill `svg-design` (instalada de [tryopendata/skills](https://github.com/tryopendata/skills)). O agente deve desenhar a logo oficial em SVG puro, sem usar placeholders de imagem bitmap:
+### Ação 1.1: Criar a Logo Vetorial com a Skill `svg-design`
+Execute o prompt abaixo para acionar a skill `svg-design` (instalada de [tryopendata/skills](https://github.com/tryopendata/skills)). O agente deve desenhar a logo oficial em SVG puro, sem utilizar imagens bitmap:
 
 ```text
 Atue sob a skill 'svg-design' (instalada de https://github.com/tryopendata/skills).
-Crie o arquivo 'public/assets/logo-voleiplay.svg' contendo a logo vetorial oficial do Voleiplay.
+Crie o arquivo 'public/assets/logo.svg' contendo a logo vetorial oficial do projeto [NOME_DO_PROJETO].
+
+Contexto do Projeto: [DESCREVA EM 1 OU 2 FRASES O PROPÓSITO DO SEU SOFTWARE].
 
 Siga os princípios da skill:
-1. Estrutura Limpa: viewBox='0 0 120 120', sem atributos fixos de width/height no root para permitir escala fluida.
-2. Identidade Visual Esportiva:
-   - Uma bola de vôlei estilizada com gomos dinâmicos em arcos e curvas Bézier elegantes.
-   - Detalhes náuticos/praianos em gradientes lineares 'areia dourada' (#EAB308) e 'azul oceano' (#0284C7).
-   - Tipografia integrada ou ícone solo centralizado e pixel-perfect.
-3. Código SVG Semântico: use <defs>, <linearGradient> com IDs descritivos, <path> otimizado e acessibilidade via <title> e <desc>.
+1. Estrutura Limpa: viewBox='0 0 120 120', sem atributos fixos de width/height no root para permitir escala fluida em qualquer resolução.
+2. Identidade Visual Marcante:
+   - Símbolo geométrico icônico que represente o nicho do software usando curvas Bézier elegantes ou traços limpos.
+   - Aplicação de gradientes lineares harmoniosos com paleta moderna (ex: primária de destaque e contraste de fundo escuro).
+   - Tipografia integrada ou ícone centralizado e pixel-perfect.
+3. Código SVG Semântico: use <defs>, <linearGradient> com IDs descritivos, <path> otimizado e tags de acessibilidade (<title> e <desc>).
 ```
 
-Salve e visualize o SVG gerado em `public/assets/logo-voleiplay.svg`.
+Salve e inspecione o arquivo gerado em `public/assets/logo.svg`.
 
-### Ação 1.2: Definir Design Tokens e Estados da Interface
-Envie o prompt abaixo para o agente a fim de criar a especificação visual do novo recurso (Exemplo: *Módulo de Registro de Scouts em Tempo Real e Premiação do Torneio*):
+### Ação 1.2: Gerar o Poster de Brand Identity System
+Utilize a logo criada na etapa anterior para gerar as diretrizes completas de marca e design system do projeto. Envie o seguinte prompt ao agente:
 
 ```text
-Atue como Designer de Produto Sênior e Especialista em Frontend Angular.
-Nosso objetivo é construir o 'Painel de Scouts em Tempo Real e Liquidação de Torneio' do Voleiplay, incorporando a logo gerada em SVG.
+Using the uploaded logo (public/assets/logo.svg), generate a high-end, agency-grade brand identity system poster.
 
-Antes de escrever qualquer código HTML:
-1. Estabeleça os Design Tokens: paleta de cores (tema escuro esportivo, areia dourada #EAB308, azul atlântico #0284C7 e ardósia #0F172A), elevações e tipografia moderna.
-2. Defina os 4 estados essenciais da interface:
-   - Carregando (Skeleton screen com feedback visual).
-   - Vazio (Nenhuma partida em andamento no momento).
-   - Sucesso com Dados Ativos (Placar, quadra tática interativa e scouts).
-   - Erro / Conexão Perdida (Opção de reconexão automática e retry).
-3. Defina o contrato de dados JSON estrito (TypeScript Interface) que o componente espera receber do backend.
+🎯 OBJECTIVE
+Create a complete, presentation-ready brand guideline board that looks like it was designed by a top branding studio. The result must feel commercial, realistic, and client-deliverable, not conceptual.
+
+⚠️ INTELLIGENCE RULE
+Before designing, analyze the logo and infer:
+- dominant color psychology
+- brand personality (luxury / tech / playful / corporate / street / minimal)
+- geometric language (sharp / curved / fluid / rigid)
+- emotional tone (bold / calm / energetic / premium)
+Then build the entire system from that analysis. No generic styling allowed.
+
+🧱 CANVAS
+- 4:5 vertical poster
+- 2K resolution
+- dense, structured grid system
+- high information density but clean hierarchy
+
+🔝 HEADER SECTION
+- Brand name: [NOME_DO_PROJETO]
+- Tagline (max 6 words, brand-relevant)
+- 3 identity traits (based on analysis)
+
+🎨 COLOR SYSTEM (SMART GENERATION)
+Extract palette from logo automatically. Include:
+- Primary colors (3–5)
+- Secondary colors (3–5)
+- Accent colors
+Each must show:
+- HEX codes
+- labeled usage (primary / UI / highlight / background)
+Also generate: gradients, color combinations, tonal variations.
+
+🔤 TYPOGRAPHY SYSTEM (MATCH PERSONALITY)
+Select typography style based on brand:
+- luxury → elegant serif
+- tech → geometric sans
+- street → bold condensed
+- corporate → clean neutral sans
+Show: headline / subheadline / body with real brand-relevant text examples and clear hierarchy.
+
+🧠 VISUAL LANGUAGE
+Define and visualize:
+- image style (editorial / lifestyle / futuristic / minimal)
+- lighting (soft / dramatic / high contrast)
+- mood (energetic / premium / calm / disruptive)
+Show 3–5 visual tiles.
+
+📦 BRAND APPLICATIONS (REALISM BOOST)
+Generate consistent mockups: packaging or product, website hero, mobile UI, 3 social media creatives, business card, billboard / ad. All must feel real-world usable.
+
+🧩 LAYOUT SYSTEM
+Grid system, spacing scale (4pt / 8pt system). Show UI components, cards, buttons, layout examples.
+
+🔘 ICONOGRAPHY
+6–10 icons in style derived from brand (rounded / sharp / minimal / filled).
+
+🧿 PATTERNS & ELEMENTS
+Shapes derived from logo, repeating motifs, background systems.
+
+🔬 MICRO DETAILS
+Shadows, reflections, textures, depth layering.
+
+🎯 VISUAL STYLE CONTROL
+Modern editorial + system design hybrid, strong hierarchy, layered composition, controlled spacing.
+
+⚡ DENSITY RULE
+Minimum 30–50 elements, mix of macro + micro components, no empty or filler space.
+
+🚫 HARD RESTRICTIONS
+No placeholders, no generic UI, no inconsistent styles, no random colors.
+
+✅ FINAL OUTPUT
+A high-end brand system poster that looks Behance feature-worthy, agency presentation-ready, visually consistent and detailed.
 ```
 
-### Ação 1.3: Validar o Contrato Visual e de Dados
-Revise a saída do agente. Garanta que o contrato possua campos obrigatórios, tipos imutáveis e tratamento de erros claros antes de prosseguir.
+### Ação 1.3: Definir Estados da Interface e Contratos de Dados
+Com a identidade visual definida, especifique a interface do usuário antes de codificar:
+1. **4 Estados de Interface:** Carregando (*Skeleton screen*), Vazio (*Empty state* educativo), Sucesso (dados renderizados) e Erro/Conexão (com botão de *retry*).
+2. **Contrato de Dados Frontend-Backend:** Defina as interfaces TypeScript com tipos primitivos, campos opcionais e tratamento de erros.
 
 ---
 
-## Fase 2: Sabatina Técnica e Decisão de Banco de Dados (Grill & Brainstorm)
+## Fase 2: Concepção de Requisitos e Decisão do Banco de Dados (Grill & Brainstorm)
 
-Nesta etapa, force o agente a assumir o papel de Arquiteto de Software Sênior para questionar premissas e guiar a seleção da tecnologia de persistência.
+Nesta etapa, force o agente a atuar como Arquiteto de Software Sênior para conduzir uma entrevista diagnóstica e guiar a decisão técnica sobre a tecnologia de persistência.
 
-### Ação 2.1: Ativar a Sabatina com Documentação (`grill-with-docs`)
-Use o comando `/grill-me` ou envie o prompt estruturado apontando para a base de conhecimento do projeto:
+### Ação 2.1: Ativar a Sabatina Técnica (`grill-with-docs` / `/grill-with-docs`)
+Use o comando `/grill-with-docs` ou envie o prompt estruturado descrevendo a ideia do seu software:
 
 ```text
-Atue sob a skill 'grill-with-docs'. Analise a documentação dos arquivos 'backend/DATABASE_GUIDE.md' e 'backend/README.md'.
+Atue sob a skill 'grill-with-docs'.
 
-Estou projetando uma nova funcionalidade:
-- Registro de lances de partida em tempo real (bloqueios, saques, ataques com coordenadas X e Y na quadra de areia).
-- Débito da taxa de inscrição e crédito do prêmio em dinheiro da dupla campeã ao final da partida.
-- Consulta de scouts em tempo real por milhares de torcedores concorrentes no app.
+Estou iniciando a construção de um novo software do zero:
+- Nome do Projeto: [NOME_DO_PROJETO]
+- Domínio e Problema a Resolver: [DESCREVA O PROBLEMA QUE O SOFTWARE RESOLVE]
+- Principais Atores e Operações: [DESCREVA QUEM USA E QUAIS SÃO AS PRINCIPAIS AÇÕES]
 
-NÃO me apresente o código final. Faça uma entrevista técnica comigo, formulando 4 perguntas desafiadoras para que eu decida:
-1. Onde aplicar garantias estritas de ACID (PostgreSQL).
-2. Onde aplicar modelagem documental flexível BASE (MongoDB).
-3. Onde aplicar cache em memória com sub-milissegundo de latência (Redis).
+NÃO me apresente o código pronto. Faça uma sabatina técnica de 4 perguntas comigo para extrair as necessidades reais do sistema e me ajudar a decidir qual banco de dados utilizar:
+1. Qual o nível de consistência exigido pelas operações centrais (Consistência Estrita ACID vs Consistência Eventual BASE)? Existem movimentações financeiras, auditoria ou reserva de recursos concorrentes?
+2. Como se comportam os esquemas de dados das principais entidades (Estrutura relacional rígida com chaves estrangeiras vs Documentos polimórficos, aninhados e mutáveis em JSON)?
+3. Qual o perfil de carga, volume e requisito de latência (Leituras massivas sub-milissegundo, escritas em rajada ou agregação de eventos em lote)?
+4. Há necessidade de persistência poliglota (combinar mais de um tipo de armazenamento)?
 
-Após as minhas respostas, resuma nossa decisão em uma matriz de trade-offs técnicos.
+Após as minhas respostas, sintetize nossa decisão em uma matriz de trade-offs técnicos comparando:
+- Banco Relacional SQL (ex: PostgreSQL)
+- Banco NoSQL Documental (ex: MongoDB)
+- Armazenamento In-Memory / Caching (ex: Redis)
 ```
 
-### Ação 2.2: Responder às Perguntas da IA e Consolidar a Arquitetura Poliglota
-Responda tecnicamente à sabatina da IA demonstrando o entendimento do Teorema CAP/PACELC e das garantias de cada banco:
-* **PostgreSQL:** Persistência contábil de carteiras dos atletas e premiação (tabelas relacionais, chaves estrangeiras, `BEGIN ... COMMIT / ROLLBACK`).
-* **MongoDB:** Scouts aninhados, eventos de rally e mapas de calor de lances na quadra (documento JSON/BSON sem migrations rígidas).
-* **Redis:** Cache das pontuações e scouts agregados via padrão *Cache-Aside* (TTL curto de 15 segundos).
+### Ação 2.2: Responder às Perguntas da IA e Formalizar a Escolha
+Responda tecnicamente às perguntas da IA justificando sua escolha com base nos pilares da computação:
+* **Se o projeto exige transações financeiras, carteiras ou contratos:** Escolha **PostgreSQL** para garantir Atomicidade e Isolamento com `BEGIN ... COMMIT / ROLLBACK`.
+* **Se o projeto armazena catálogos dinâmicos, formulários flexíveis ou eventos semiestruturados:** Escolha **MongoDB** para modelagem orientada a documentos e agilidade de esquema.
+* **Se o projeto tem rotas com tráfego massivo e dados repetitivos:** Adicione **Redis** como camada de *Cache-Aside* com tempo de expiração (TTL).
 
 ---
 
 ## Fase 3: Planejamento Arquitetural Estruturado (Writing Plans)
 
-Transforme a decisão arquitetural em um plano de engenharia granular e verificável.
+Transforme a decisão arquitetural em um plano de engenharia granular e verificável antes de iniciar a escrita de código.
 
 ### Ação 3.1: Solicitar o Plano de Implementação (`/plan`)
 Execute o comando `/plan` ou envie o seguinte prompt:
 
 ```text
 Atue sob a skill 'writing-plans'.
-Com base na decisão da Fase 2, elabore um plano de execução passo a passo em formato Markdown.
+Com base na decisão da Fase 2, elabore um plano de execução passo a passo em formato Markdown para construir o backend e frontend do [NOME_DO_PROJETO].
 
 O plano deve conter obrigatoriamente:
-1. Contratos de Tipos e DTOs (TypeScript) para a transação e para os scouts.
-2. Definição da camada arquitetural: escolha se o recurso será implementado como Vertical Slice ou dentro da Arquitetura Hexagonal (Portas e Adaptadores).
+1. Contratos de Tipos e DTOs (TypeScript) para as entidades principais.
+2. Definição da organização arquitetural do código (ex: Arquitetura Hexagonal com Portas/Adaptadores ou Vertical Slice por funcionalidade).
 3. Sequência estrita de implementação TDD (Test-Driven Development):
-   - Passo de Teste Unitário -> Passo de Implementação do Repositório -> Passo de Endpoint HTTP.
+   - 1º Teste Unitário -> 2º Repositório de Dados -> 3º Serviço de Domínio -> 4º Controller/Rota HTTP.
 4. Critérios de aceitação objetivos e verificáveis para cada etapa.
 ```
 
 ### Ação 3.2: Salvar o Plano
-Armazene o documento gerado em `plans/feature-scouts-premiacao.md` e faça o commit inicial no repositório.
+Armazene o documento gerado em `plans/implementacao.md` e faça o commit inicial no repositório.
 
 ---
 
-## Fase 4: Infraestrutura & Orquestração Docker (Hands-on)
+## Fase 4: Infraestrutura & Containerização Docker do Zero (Hands-on)
 
-Construa a infraestrutura de containers entendendo o papel de cada diretiva, sem aplicar arquivos sem inspeção prévia.
+Construa a infraestrutura completa de containers do projeto, entendendo a finalidade de cada instrução.
 
 ### Ação 4.1: Construir o Dockerfile Multi-Stage do Frontend
-Crie o arquivo `Dockerfile.frontend` aplicando a técnica de otimização de imagens em múltiplos estágios:
+Crie o arquivo `Dockerfile.frontend` aplicando a técnica de múltiplos estágios para otimizar tamanho e segurança:
 
 ```dockerfile
-# Estágio 1: Build da Aplicação Angular
+# Estágio 1: Build da Aplicação Web
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -172,15 +244,15 @@ RUN npm ci
 COPY . .
 RUN npm run build -- --configuration production
 
-# Estágio 2: Imagem Final Leve com Servidor Nginx
+# Estágio 2: Imagem Final Leve com Nginx
 FROM nginx:1.25-alpine
-COPY --from=builder /app/dist/voleiplay/browser /usr/share/nginx/html
+COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-Compreenda a razão: O primeiro estágio contém Node.js e ferramentas pesadas (~1 GB); o estágio final mantém apenas o Nginx e os arquivos estáticos compilados (~25 MB).
+> **Fundamento Técnico:** O estágio de compilação contém ferramentas pesadas (~1 GB); a imagem final entregue em produção contém exclusivamente o Nginx e os arquivos estáticos otimizados (~25 MB).
 
 ### Ação 4.2: Construir o Dockerfile do Backend
 Crie o arquivo `backend/Dockerfile`:
@@ -192,59 +264,62 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 EXPOSE 3000
-CMD ["npm", "run", "dev:all"]
+CMD ["npm", "run", "dev"]
 ```
 
-### Ação 4.3: Configurar o `docker-compose.yml` com Healthchecks Estritos
-Configure os serviços de infraestrutura assegurando que o backend aguarde a inicialização completa e saudável dos bancos de dados:
+### Ação 4.3: Configurar o `docker-compose.yml` com Healthchecks e Redes
+Crie o arquivo `docker-compose.yml` integrando a aplicação e os bancos de dados selecionados na Fase 2, garantindo que o backend aguarde a integridade real dos bancos antes de iniciar:
 
 ```yaml
 version: '3.8'
 
 services:
+  # Banco Relacional SQL (se selecionado na Fase 2)
   postgres:
     image: postgres:16-alpine
-    container_name: voleiplay-postgres
+    container_name: app-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: voleiplay
-      POSTGRES_PASSWORD: voleiplay_pass
-      POSTGRES_DB: voleiplay
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_database
     ports:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
-      - voleiplay-net
+      - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U voleiplay -d voleiplay"]
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_database"]
       interval: 5s
       timeout: 3s
       retries: 5
 
+  # Banco NoSQL Documental (se selecionado na Fase 2)
   mongodb:
     image: mongo:7
-    container_name: voleiplay-mongodb
+    container_name: app-mongodb
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: voleiplay
-      MONGO_INITDB_ROOT_PASSWORD: voleiplay_pass
-      MONGO_INITDB_DATABASE: voleiplay
+      MONGO_INITDB_ROOT_USERNAME: app_user
+      MONGO_INITDB_ROOT_PASSWORD: app_password
+      MONGO_INITDB_DATABASE: app_database
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
-      - voleiplay-net
+      - app-network
     healthcheck:
       test: ["CMD-SHELL", "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet"]
       interval: 5s
       timeout: 3s
       retries: 5
 
+  # Cache In-Memory (se selecionado na Fase 2)
   redis:
     image: redis:7-alpine
-    container_name: voleiplay-redis
+    container_name: app-redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning
     ports:
@@ -252,26 +327,28 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - voleiplay-net
+      - app-network
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 5s
       timeout: 3s
       retries: 5
 
+  # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: voleiplay-api
+    container_name: app-api
     ports:
       - "3000:3000"
     environment:
+      PORT: 3000
       POSTGRES_HOST: postgres
-      POSTGRES_USER: voleiplay
-      POSTGRES_PASSWORD: voleiplay_pass
-      POSTGRES_DB: voleiplay
-      MONGO_URI: mongodb://voleiplay:voleiplay_pass@mongodb:27017/voleiplay?authSource=admin
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_database
+      MONGO_URI: mongodb://app_user:app_password@mongodb:27017/app_database?authSource=admin
       REDIS_HOST: redis
     depends_on:
       postgres:
@@ -281,10 +358,10 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - voleiplay-net
+      - app-network
 
 networks:
-  voleiplay-net:
+  app-network:
     driver: bridge
 
 volumes:
@@ -305,61 +382,74 @@ docker compose ps
 
 ## Fase 5: Execução Controlada e Implementação (Execute Plans)
 
-Execute os passos planejados de forma atômica com o agente.
+Execute os passos planejados de forma atômica e incremental com o agente.
 
 ### Ação 5.1: Iniciar a Implementação Guiada (`execute-plans` / `/goal`)
 Envie a instrução de execução para a IA:
 
 ```text
 Atue sob a skill 'execute-plans'.
-Execute o primeiro item do plano 'plans/feature-scouts-premiacao.md':
-1. Escreva o teste de unidade que valida o cálculo da taxa de premiação e o isolamento de concorrência.
-2. Implemente o código mínimo para fazer o teste passar.
-3. Não avance para o próximo passo sem a minha confirmação explícita.
+Execute o primeiro item do plano 'plans/implementacao.md':
+1. Escreva o teste de unidade da regra central de negócio.
+2. Implemente o código mínimo necessário para fazer o teste passar verde.
+3. Não avance para o próximo passo sem a minha validação explícita.
 ```
 
 ### Ação 5.2: Inspeção Contínua
 A cada alteração gerada pela IA:
 * Analise o diff no Git.
-* Valide se nenhuma convenção do projeto foi violada.
-* Execute o comando de compilação: `npm run build` ou `npx tsx --check`.
+* Valide se nenhuma dependência indevida foi introduzida.
+* Execute a checagem de tipos e lint: `npx tsc --noEmit` ou equivalente.
 
 ---
 
 ## Fase 6: Construção da Suíte de Testes 5 Estrelas
 
-Construa a pirâmide de testes completa, cobrindo desde a lógica isolada até o comportamento sob carga e a robustez dos testes.
+Construa a pirâmide de testes completa para garantir que a aplicação seja resiliente, performática e arquiteturalmente sólida.
 
-### 1. Testes Unitários Isolados (Vitest)
-Crie o arquivo de teste unitário testando o caso de sucesso e o caso de falha transacional (rollback contábil).
+```
+                  /\
+                 /  \     5. Testes de Arquitetura (Dependency Cruiser / ArchUnit)
+                /----\
+               /      \    4. Testes de Carga & Estresse (Autocannon / k6)
+              /--------\
+             /          \   3. Testes Mutantes (Stryker Mutator)
+            /------------\
+           /              \  2. Testes Funcionais / BDD (Gherkin / Features)
+          /----------------\
+         /                  \ 1. Testes Unitários Isolados (Vitest / Jest)
+        ----------------------
+```
 
-* **Comando para executar:**
+### 1. Testes Unitários Isolados
+Teste todas as regras de negócio de forma isolada, simulando dependências externas através de mocks e stubs.
+
+* **Executar os testes:**
 ```bash
 npm run test:unit
 ```
-* **Critério de Aceite:** 100% dos testes unitários passando com mocks explícitos dos adaptadores de banco.
+* **Critério de Aceite:** 100% dos testes unitários passando com asserções estritas tanto para fluxos de sucesso quanto para cenários de erro/exceção.
 
 ---
 
 ### 2. Testes Funcionais / BDD (Gherkin em Português)
-Crie a especificação de negócio legível por humanos e automatizada no arquivo `tests/functional/features/premiacao-partida.feature`:
+Crie cenários de negócio legíveis no formato `Dado / Quando / Então` dentro de arquivos `.feature`:
 
 ```gherkin
-Funcionalidade: Liquidação Financeira de Partida de Vôlei de Praia
-  Como organizador do torneio
-  Quero finalizar uma partida oficial
-  Para que a premiação seja creditada à dupla vencedora de forma atômica
+Funcionalidade: Operação Central do Sistema
+  Como usuário autenticado
+  Quero realizar uma operação essencial
+  Para obter o resultado de negócio esperado
 
-  Cenário: Liquidação de premiação com saldo suficiente
-    Dado que a dupla "Alison / Bruno" venceu a final por 2 sets a 1
-    E o saldo inicial da organização é de 10000 reais
-    Quando o árbitro confirma o resultado da partida
-    Então o sistema deve debitar 2000 reais da conta do torneio
-    E creditar 1000 reais para "Alison" e 1000 reais para "Bruno"
-    E a transação deve ser confirmada com status "COMMIT" no PostgreSQL
+  Cenário: Execução de operação com dados válidos
+    Dado que o usuário possui permissão de acesso
+    E os dados de entrada atendem a todos os critérios de validação
+    Quando o usuário submete a requisição para a API
+    Então o sistema deve registrar a operação com sucesso
+    E retornar o código HTTP 201 com o identificador criado
 ```
 
-* **Comando para executar:**
+* **Executar os testes funcionais:**
 ```bash
 npm run test:functional
 ```
@@ -367,62 +457,60 @@ npm run test:functional
 ---
 
 ### 3. Testes de Carga & Estresse (Autocannon / k6)
-Avalie a capacidade de resposta da API sob alta concorrência comparando o acesso com e sem cache Redis.
+Submeta os endpoints da API a testes de concorrência massiva para identificar limites de throughput e comprovar a eficiência do cache.
 
-* **Executar o script de teste de carga:**
+* **Executar o teste de carga:**
 ```bash
-npx autocannon -c 100 -d 20 -p 10 http://localhost:3000/api/matches/match-1/scouts
+npx autocannon -c 100 -d 20 -p 10 http://localhost:3000/api/endpoint-principal
 ```
 
 * **Métricas Obrigatórias a Documentar:**
-  - Requisições por segundo (RPS) com Cache Redis vs Direto no MongoDB.
+  - Requisições por segundo (RPS) sustentadas.
   - Latência de resposta (p50, p95 e p99 em milissegundos).
   - Porcentagem de erros HTTP 5xx (deve ser 0%).
 
 ---
 
 ### 4. Testes Mutantes (Stryker Mutator)
-Avalie se os seus testes realmente encontram falhas ou se são apenas testes "figurativos".
+Avalie a eficácia real da suíte de testes unitários através da injeção automatizada de mutações no código-fonte.
 
-### Ação 6.4.1: Configurar e Executar o Stryker
-Instale e execute a análise de mutantes:
-
+### Ação 6.4.1: Executar a Análise de Mutantes
 ```bash
 npx stryker run
 ```
 
-### Ação 6.4.2: Interpretar o Relatório de Mutantes
-* O Stryker injetará mutações no código-fonte (ex: trocar `saldo >= taxa` por `saldo > taxa`, remover chamadas de rollback).
-* **Mutante Morto (Killed):** O teste falhou. Isso é o esperado; comprova que o teste detecta bugs.
-* **Mutante Sobrevivente (Survived):** O código foi corrompido e o teste continuou passando verde. **Ação imediata:** Adicione novos asserções e testes para matar o mutante.
+### Ação 6.4.2: Interpretar os Resultados
+* O Stryker injeta alterações lógicas intencionais no código (inversão de condicionais, troca de operadores, remoção de chamadas).
+* **Mutante Morto (Killed):** O teste falhou diante da mutação. Comprova que o teste é eficaz e detecta regressões.
+* **Mutante Sobrevivente (Survived):** A mutação foi inserida e os testes continuaram passando verdes. **Ação imediata:** Crie novos casos de teste para eliminar o mutante sobrevivente.
 * **Meta obrigatória:** *Mutation Score* igual ou superior a **80%**.
 
 ---
 
 ### 5. Testes de Arquitetura (Dependency Cruiser / ArchUnit)
-Garanta por código que as regras de dependência de camadas não sejam violadas ao longo do tempo.
+Garanta por meio de testes automatizados que as fronteiras arquiteturais do projeto sejam respeitadas.
 
-### Ação 6.5.1: Criar Regra de Isolamento de Camadas
-Configure a regra no arquivo `.dependency-cruiser.js` impedindo que arquivos da camada de Domínio importem bibliotecas de infraestrutura ou adaptadores:
+### Ação 6.5.1: Criar Regras de Fronteira no `.dependency-cruiser.js`
+Configure regras impedindo violações de camadas (ex: camadas de domínio puro não podem importar bibliotecas de infraestrutura, bancos de dados ou frameworks HTTP):
 
 ```javascript
 module.exports = {
   forbidden: [
     {
       name: 'domain-cannot-import-infrastructure',
-      comment: 'O núcleo de domínio não pode conhecer PostgreSQL, MongoDB, Redis ou Express',
+      comment: 'O núcleo de domínio não pode importar adaptadores externos de banco ou HTTP',
       severity: 'error',
-      from: { path: '^backend/shared/domain' },
-      to: { path: '^backend/(shared/database|adapters|node_modules/(express|pg|mongodb|ioredis))' }
+      from: { path: '^src/domain' },
+      to: { path: '^src/(infrastructure|adapters|database)' }
     },
     {
-      name: 'slices-cannot-depend-on-other-slices',
-      comment: 'Uma Vertical Slice deve ser autocontida e não deve acoplar internamente com outra Slice',
+      name: 'modules-cannot-cross-depend-directly',
+      comment: 'Módulos independentes não devem acoplar diretamente sem contratos explícitos',
       severity: 'error',
-      from: { path: '^backend/2-vertical-slice/features/([^/]+)' },
+      from: { path: '^src/modules/([^/]+)' },
       to: {
-        path: '^backend/2-vertical-slice/features/([^/]+)',
-        pathNot: '^backend/2-vertical-slice/features/$1'
+        path: '^src/modules/([^/]+)',
+        pathNot: '^src/modules/$1'
       }
     }
   ]
@@ -431,9 +519,9 @@ module.exports = {
 
 ### Ação 6.5.2: Executar a Verificação Arquitetural
 ```bash
-npx depcruise --config .dependency-cruiser.js backend
+npx depcruise --config .dependency-cruiser.js src
 ```
-* **Critério de Aceite:** 0 violações de fronteiras arquiteturais encontradas.
+* **Critério de Aceite:** 0 violações arquiteturais encontradas.
 
 ---
 
@@ -442,13 +530,13 @@ npx depcruise --config .dependency-cruiser.js backend
 Antes de submeter o projeto, execute e valide cada um dos itens abaixo:
 
 - [ ] Instalação das skills concluída via `npx skills add` ou restaurada com `npx skills experimental_install`.
-- [ ] Logo oficial do Voleiplay gerada em SVG semântico (`public/assets/logo-voleiplay.svg`) usando a skill `svg-design`.
-- [ ] Contratos de UI e tokens de design documentados em Markdown.
-- [ ] Transcrição da sabatina com a IA contendo a justificativa técnica para o uso do PostgreSQL, MongoDB e Redis.
-- [ ] Plano de execução gerado (`plans/*.md`) com critérios de aceite TDD.
-- [ ] `docker compose up -d` executado com todos os containers em estado `healthy`.
-- [ ] Testes Unitários rodando e passando com `npm run test:unit`.
-- [ ] Testes Funcionais em Gherkin passando com `npm run test:functional`.
-- [ ] Testes de Carga executados e métricas de ganho com Redis registradas.
+- [ ] Logo oficial vetorial criada em SVG limpo (`public/assets/logo.svg`) utilizando a skill `svg-design`.
+- [ ] Brand Identity System Poster gerado e documentado.
+- [ ] Transcrição da sabatina técnica com a IA contendo a justificativa da escolha do banco de dados (SQL, NoSQL e/ou Cache).
+- [ ] Plano de implementação TDD (`plans/implementacao.md`) aprovado e versionado no Git.
+- [ ] `docker compose up -d` executado com todos os serviços em estado `healthy`.
+- [ ] Testes Unitários executados e passando verde (`npm run test:unit`).
+- [ ] Testes Funcionais em formato Gherkin passando verde (`npm run test:functional`).
+- [ ] Testes de Carga executados com métricas de RPS e latências p95/p99 documentadas.
 - [ ] Análise de Testes Mutantes concluída com Mutation Score $\ge 80\%$.
-- [ ] Testes de Arquitetura executados sem quebras de fronteiras de camadas.
+- [ ] Testes de Arquitetura executados com 0 violações de fronteiras de código.
