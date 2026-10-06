@@ -1,0 +1,10 @@
+name = "voleiplay-mvp-calculator"
+main = "src/index.ts"
+compatibility_date = "2024-04-01"
+
+# Modo de compatibilidade com Node.js caso bibliotecas auxiliares sejam usadas
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+APP_NAME = "VoleiPlay MVP Serverless Calculator"

@@ -11,6 +11,7 @@ import { createPrizeRouter } from './4-saga/prize-service/prize.router.js';
 import { createSagaRouter } from './4-saga/saga-orchestrator/saga.router.js';
 import { createObservabilityRouter } from './shared/observability/observability.router.js';
 import { createDatabaseRouter } from './shared/database/database.router.js';
+import { createMvpCalculatorRouter } from './serverless/mvp-calculator.router.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,9 @@ app.use('/observability', createObservabilityRouter());
 
 // Laboratório Didático de Persistência Poliglota & Caching (PostgreSQL, MongoDB, Redis)
 app.use('/database', createDatabaseRouter());
+
+// Laboratório Didático de Serverless / FaaS (Calculadora de MVP & Estatísticas)
+app.use('/serverless/mvp-calculator', createMvpCalculatorRouter());
 
 // Endpoint de Healthcheck oficial do Gateway
 app.get('/health', (req, res) => {
@@ -966,6 +970,7 @@ app.listen(PORT, () => {
   console.log(`   🐘 PostgreSQL (ACID):http://localhost:${PORT}/database/status`);
   console.log(`   🍃 MongoDB (NoSQL):  http://localhost:${PORT}/database/nosql/scouts`);
   console.log(`   ⚡ Redis Cache-Aside:http://localhost:${PORT}/database/cache-demo/player/p-1`);
-  console.log(`   ⏱️ DB Benchmark:     http://localhost:${PORT}/database/benchmark\n`);
+  console.log(`   ⏱️ DB Benchmark:     http://localhost:${PORT}/database/benchmark`);
+  console.log(`   ⚡ Serverless FaaS:  http://localhost:${PORT}/serverless/mvp-calculator\n`);
 });
 

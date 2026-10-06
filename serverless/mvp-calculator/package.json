@@ -1,0 +1,27 @@
+{
+  "name": "voleiplay-mvp-calculator",
+  "version": "1.0.0",
+  "description": "Serverless Function para cálculo de estatísticas e MVP de vôlei de praia (Cloudflare Worker)",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "tsx verify-calculator.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "serverless",
+    "cloudflare-workers",
+    "faas",
+    "volleyball",
+    "stateless"
+  ],
+  "author": "VoleiPlay Architecture Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.50.0"
+  }
+}
